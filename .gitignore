@@ -1,0 +1,27 @@
+# macOS
+.DS_Store
+
+# Node
+node_modules/
+npm-debug.log*
+
+# Secrets
+.env
+.env.*
+*.key
+*.pem
+
+# Generated PowerPoint outputs
+*.pptx
+
+# Rendered previews
+rendered/
+**/rendered/
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+
+# Logs
+*.log
