@@ -24,7 +24,7 @@ The first PPTX is a draft, not automatically final.
 3. **Art direction:** define palette, type scale, margins, spacing, card and icon treatment, and image direction. A provided brand system is authoritative; borrow only general characteristics from reference imagery. See [design system](references/design-system.md).
 4. **Assets:** define a shared art direction before generating multiple originals. First verify that the built-in `imagegen` tool can actually be called in the current session. If it is callable, use it. If it is unavailable, check only whether `OPENAI_API_KEY` is non-empty (never print, write, or otherwise expose its value) and use [`scripts/generate-image.js`](scripts/generate-image.js) with the OpenAI Images API when it is available. If neither path is available, do not claim that original images were generated; use editable PowerPoint shapes only where they keep the deck functional, and report the limitation. Use descriptive filenames, request the correct crop and negative space, avoid meaningful text inside images, and do not generate images for editable diagrams or charts. See [image generation](references/image-generation.md).
 5. **Build:** compose the editable presentation with a reusable component layer. Adapt [the component template](assets/presentation-components.js) when useful, and follow [PptxGenJS conventions](references/pptxgenjs-conventions.md).
-6. **Validate and improve:** follow [validation](references/validation.md). Render, inspect, fix, regenerate, and recheck when rendering is available.
+6. **Validate and improve:** follow [validation](references/validation.md). When rendering is available, the required loop is: generate PPTX → render → inspect every slide against the storyboard and art direction → correct the JavaScript source → regenerate PPTX → rerender. Use [`scripts/render-presentation.js`](scripts/render-presentation.js) with LibreOffice on macOS and read [visual validation](references/visual-validation.md) before inspecting. Run at most three automatic passes by default; if a material issue remains, deliver the best result and report it honestly.
 7. **Deliver:** give the `.pptx` first, keeping the JavaScript and assets for reproduction.
 
 ## Narrative and layouts
@@ -65,4 +65,5 @@ Respect the grid, safe margins, alignment, vertical rhythm, proportions, hierarc
 - Read [storyboard and layouts](references/storyboard-layouts.md) when planning a multi-slide deck.
 - Read [PptxGenJS conventions](references/pptxgenjs-conventions.md) while implementing source code.
 - Read [validation](references/validation.md) before delivery or while correcting defects.
+- Read [visual validation](references/visual-validation.md) whenever slide PNG renders are available; compare them with the storyboard and art direction, not only technical checks.
 - Read [image generation](references/image-generation.md) when a deck needs original raster visuals or an API fallback.

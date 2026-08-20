@@ -12,8 +12,8 @@ The first generated deck is not automatically final. After each material correct
 
 ## Render-and-review loop
 
-When LibreOffice, PowerPoint, or an equivalent renderer is available, render into `rendered/`, inspect every slide, then correct and rerender. Check text overflow/clipping, off-frame objects, overlap, distorted images, inconsistent margins, weak contrast, undersized items, and information overload.
+When LibreOffice is available on macOS, run `node scripts/render-presentation.js presentation.pptx rendered/`; it creates a PDF and one high-resolution `slide-XX.png` per slide. Otherwise use PowerPoint or an equivalent renderer. Inspect every slide using [visual validation](visual-validation.md), correct the JavaScript source, regenerate the PPTX, and rerender. Limit the automatic build-render-review loop to three passes by default.
 
 When no renderer exists, complete the structural/code checks and explicitly say that full visual inspection could not be performed. Do not claim an inspection that was unavailable.
 
-Stop when structural checks pass and the final visual review, when available, finds no material defect. Report any tool limitation and the alternate check used.
+Stop when structural checks pass and the final visual review, when available, finds no material defect. If a material issue remains after three passes, deliver the best available result and report the limitation precisely. Report any rendering tool limitation and the alternate check used.
