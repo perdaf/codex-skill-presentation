@@ -14,7 +14,7 @@ Do not ask a user to paste a key into chat. A configured environment variable is
 
 ## Art direction for a set of images
 
-Before generating any images, write a compact shared direction: medium, palette, lighting, perspective, framing, level of realism, subject placement, negative space, and constraints. Repeat it in every prompt, then add only the image-specific scene. Use descriptive filenames such as `hero-robot-lab.png` or `privacy-lock-illustration.png`.
+Before generating any images, write the visual bible specified in [image art direction](image-art-direction.md). Repeat it in every prompt, then add the image-specific scene and the destination-aware crop/negative-space instructions. Use descriptive filenames such as `hero-robot-lab.png` or `privacy-lock-illustration.png`.
 
 Avoid meaningful text inside generated images. Compose titles, labels, statistics, diagrams, and calls to action as editable PowerPoint elements.
 

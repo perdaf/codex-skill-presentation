@@ -1,6 +1,6 @@
 # Storyboard and layouts
 
-Plan a multi-slide deck internally before coding. Capture number, objective, title, main message, concise content, layout, visual/image/chart/diagram need, and transition from the prior slide. Pick slide count for objective and duration, not a quota. In Gamma mode, use a concise arc such as hook, context/problem, insights or explanation, evidence/example, implications, and conclusion/CTA.
+Plan a multi-slide deck internally before coding. Capture number, objective, title, main message, concise content, density (LOW/MEDIUM/HIGH), focal point, layout, visual/image/chart/diagram need, and transition from the prior slide. Pick slide count for objective and duration, not a quota. Review the complete sequence for visual rhythm before implementation.
 
 | Layout | Use when | Preferred construction |
 | --- | --- | --- |
@@ -19,3 +19,5 @@ Plan a multi-slide deck internally before coding. Capture number, objective, tit
 | Divider / conclusion / CTA | Reset or close narrative | One decisive statement and visual cue |
 
 Do not rotate layouts mechanically. Bullets are appropriate only when they are the clearest form; otherwise split content or recast it as cards, steps, statistics, or a diagram.
+
+Use the expanded regions and sequencing helper in [`assets/layouts.js`](../assets/layouts.js); the authoritative list and rhythm rules are in [layout library](layout-library.md).
