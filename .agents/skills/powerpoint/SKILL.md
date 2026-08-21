@@ -1,11 +1,11 @@
 ---
 name: powerpoint
-description: Create, modify, and validate editable PowerPoint presentations with PptxGenJS, including Gamma-like end-to-end storytelling, art direction, visuals, and quality control. Use for PPTX decks, slides, templates, training, education, business, and social-media presentations; use imagegen for original raster visuals.
+description: Create, modify, and validate editable PowerPoint presentations and print-ready A4 learning handouts, including storytelling, pedagogy, art direction, visuals, and quality control. Use for PPTX decks, slides, training, education, business, social-media presentations, and dual projection/handout courses; use imagegen for original raster visuals.
 ---
 
-# PowerPoint V4.1 — Presentation Design Engine
+# PowerPoint V4.2 — Teaching & Handout Engine
 
-Create an editable, presentation-ready `.pptx` with PptxGenJS 4.0.1. Treat “create a presentation on X” as an end-to-end design request: choose a fitting visual system, build a coherent narrative, and validate the rendered result. Do not make a slide deck a single image, rasterize editable content, or modify the `imagegen` skill. This skill is compatible with Codex CLI 0.148.0.
+Create editable, presentation-ready `.pptx` files with PptxGenJS 4.0.1 and, when requested, autonomous print-ready A4 handout PDFs derived from the same course content. Treat “create a presentation on X” as an end-to-end design request; treat a training request as both a content-design and delivery-design problem. Do not rasterize editable content or modify the `imagegen` skill. This skill is compatible with Codex CLI 0.148.0.
 
 ## Non-negotiable constraints
 
@@ -15,19 +15,21 @@ Create an editable, presentation-ready `.pptx` with PptxGenJS 4.0.1. Treat “cr
 - Keep JavaScript and every generated or supplied asset. Do not delete source files or flatten a deck without explicit permission.
 - Default to `LAYOUT_WIDE` (13.333 × 7.5 in, 16:9), except where the request, a template, or a social format calls for another size.
 - Preserve V3 behavior: decks may use no images; charts and diagrams remain editable; imagegen and the `gpt-image-2` fallback remain available; LibreOffice rendering, PNG inspection, source preservation, structural checks, and the three-pass correction limit remain mandatory when applicable.
+- Keep content separate from rendering for training work. Resolve `CONTENT_DEPTH`, `DELIVERY_MODE`, and `PAGE_BUDGET` with [Teaching & Handout Engine](references/teaching-handout-engine.md) before storyboarding.
 
 ## Workflow
 
 The first PPTX is a draft, not automatically final.
 
-1. **Analyze:** infer or identify objective, audience, knowledge level, context, language, tone, style, slide count, duration, format, branding, and references. Ask only when a missing answer materially changes the deck; otherwise choose a sound default.
-2. **Select the visual system:** if brand assets exist, derive a brand theme and give them priority. Otherwise choose a profile automatically from the audience, purpose, subject, and format; do not routinely ask. See [design profiles](references/design-profiles.md), [composition engine](references/composition-engine.md), and [design system](references/design-system.md).
-3. **Storyboard and rhythm:** before coding, define internally for every slide its objective, main message, condensed content, density (`LOW`, `MEDIUM`, or `HIGH`), layout, focal point, visual need, and transition. Most slides are LOW or MEDIUM. Review the complete layout sequence before building. See [storyboard](references/storyboard-layouts.md) and [layout library](references/layout-library.md).
-4. **Art direction:** instantiate or adapt a token theme for palette, six typographic roles, spacing, radius, shadows, grid, shapes, icons, and photographic treatment. Allow controlled variation but keep coherence stronger than variety.
-5. **Assets:** before generating multiple originals, write one visual bible. Make each prompt aware of its target region, crop, focal placement, and negative-space requirement. Prefer the built-in `imagegen`; when it is not callable, use the existing `gpt-image-2` fallback only when `OPENAI_API_KEY` is configured. See [image art direction](references/image-art-direction.md) and [image generation](references/image-generation.md).
-6. **Build:** compose with theme-aware [components](assets/presentation-components.js) and [layouts](assets/layouts.js), preserving editability. Follow [PptxGenJS conventions](references/pptxgenjs-conventions.md).
-7. **Validate and improve:** run structural checks, render with LibreOffice when available, inspect every PNG for both technical and design defects, and score the deck internally. Correct the JavaScript source and rerender, with at most three automatic passes. See [validation](references/validation.md), [visual validation](references/visual-validation.md), and [design score](references/design-score.md).
-8. **Deliver:** give the `.pptx` first, keeping the JavaScript and assets for reproduction.
+1. **Analyze:** infer or identify objective, audience, knowledge level, context, language, tone, style, slide count, duration, format, branding, and references. For training, resolve `CONTENT_DEPTH`, `DELIVERY_MODE`, and `PAGE_BUDGET`; ask only when a missing answer materially changes the output.
+2. **Research and master content when needed:** for `DETAILED`, `ULTRA_DETAILED`, or `DUAL`, establish the factual content and pedagogical progression before design. In `DUAL`, both outputs must derive from one master source; preserve it as `content/course-content.md`.
+3. **Select the visual system:** if brand assets exist, derive a brand theme and give them priority. Otherwise choose a profile automatically from the audience, purpose, subject, and format; do not routinely ask. See [design profiles](references/design-profiles.md), [composition engine](references/composition-engine.md), and [design system](references/design-system.md).
+4. **Plan pedagogy, storyboard, and rhythm:** define learning objectives and progression before mapping the master content to projection slides and/or A4 pages. Apply pedagogical compression rather than deleting essential explanations or shrinking type.
+5. **Art direction:** instantiate or adapt a token theme for palette, typography, spacing, grid, shapes, icons, photographic treatment, and a print-friendly handout adaptation when applicable.
+6. **Assets:** before generating multiple originals, write one visual bible. Make each prompt aware of its target region, crop, focal placement, and negative-space requirement. Prefer built-in `imagegen`; use the existing fallback only under its current rules.
+7. **Build:** compose projection slides with existing theme-aware [components](assets/presentation-components.js) and [layouts](assets/layouts.js). Build handouts as genuine A4 pages rather than slide printouts. Preserve editable source material and follow [PptxGenJS conventions](references/pptxgenjs-conventions.md).
+8. **Validate and improve:** run pedagogical validation before visual validation. For handouts, also validate print format and autonomy. Correct sources and rerender, retaining the existing three-pass maximum.
+9. **Deliver:** provide the requested outputs and keep JavaScript, master content, assets, PDF, PPTX, and renders needed for reproduction.
 
 ## Design behavior
 
@@ -57,6 +59,23 @@ presentation-name/
 
 Use meaningful filenames, reuse identical assets, and avoid unnecessary dependencies.
 
+For `DUAL`, prefer:
+
+```text
+course-name/
+├── presentation.pptx
+├── presentation.js
+├── handout.pdf
+├── handout.js
+├── content/course-content.md
+├── assets/images/
+└── rendered/
+    ├── presentation/
+    └── handout/
+```
+
+The handout source may use an intermediate A4 PPTX for LibreOffice conversion; retain it when it is useful for reproduction. Do not force this structure on presentation-only V4.1 workflows.
+
 ## Required quality bar
 
 Respect the grid, safe margins, alignment, vertical rhythm, proportions, hierarchy, and image zones. Keep important content away from edges; never knowingly place an element outside the slide, stretch an image, leave low-contrast text, or create an overcrowded slide. If no rendering engine is available, do structural and code checks and say that full visual inspection was unavailable.
@@ -74,3 +93,4 @@ Respect the grid, safe margins, alignment, vertical rhythm, proportions, hierarc
 - Read [image generation](references/image-generation.md) when a deck needs original raster visuals or an API fallback.
 - Read [image art direction](references/image-art-direction.md) before generating deck imagery.
 - Read [design score](references/design-score.md) during final visual validation.
+- Read [Teaching & Handout Engine](references/teaching-handout-engine.md) for training requests, `DETAILED` or `ULTRA_DETAILED` content, A4 handouts, or `DUAL` delivery.

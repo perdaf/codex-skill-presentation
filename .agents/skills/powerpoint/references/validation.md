@@ -2,6 +2,8 @@
 
 The first generated deck is not automatically final. After each material correction, regenerate and validate it.
 
+For `DETAILED`, `ULTRA_DETAILED`, `HANDOUT`, or `DUAL`, run the pedagogical and print checks in [Teaching & Handout Engine](teaching-handout-engine.md) before or alongside the visual checks. Pedagogical validation is a distinct gate: visual polish cannot compensate for missing, unordered, or unactionable instruction.
+
 ## Structural checks
 
 1. Confirm that the PPTX exists and is non-empty.

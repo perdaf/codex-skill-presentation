@@ -4,8 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "node tests/test-design-engine.js && node tests/test-auto-style.js",
-    "test:auto-style": "node tests/test-auto-style.js"
+    "test": "node tests/test-design-engine.js && node tests/test-auto-style.js && node tests/test-teaching-engine.js",
+    "test:auto-style": "node tests/test-auto-style.js",
+    "test:teaching": "node tests/test-teaching-engine.js"
   },
   "keywords": [],
   "author": "",
