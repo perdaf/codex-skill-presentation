@@ -16,6 +16,7 @@ Set language, title, subject, and layout from the request. A supplied template c
 - Keep editable material in PptxGenJS text, shapes, tables, and charts. Use PptxGenJS image `sizing` with `cover` or `contain`; never stretch images.
 - Use native charts where quantitative comparison matters. Keep labels, legend, and units readable, and simplify categories when needed.
 - Build simple processes and diagrams from shapes/connectors; avoid crossing lines.
+- For functional symbols whose exact appearance carries meaning, prefer in order: editable PowerPoint shapes, compatible SVG/vector assets, explicitly controlled pictograms, then emoji only when platform-dependent rendering is immaterial. Emojis remain acceptable for expressive or decorative use, but important information must not depend on their glyph, color, or availability.
 - Use inches consistently and verify every coordinate and size against the selected slide dimensions.
 - Avoid unlicensed external-font dependencies. Prefer common-system fallbacks when a brand font cannot be embedded.
 

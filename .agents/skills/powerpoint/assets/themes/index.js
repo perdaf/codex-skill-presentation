@@ -27,8 +27,34 @@ const profiles = {
   social: profile('social', { colors: { primary: '151515', secondary: '6D28D9', accent: 'F43F5E', background: 'FFFDF8', text: '151515', chart: ['151515', '6D28D9', 'F43F5E', 'F59E0B'] }, typography: { display: { size: 50 }, title: { size: 39 }, subtitle: { size: 22 }, body: { size: 20 }, stat: { size: 48 } }, layout: { margin: 0.64, density: 'LOW' }, radius: { card: 0.1 }, shapeStyle: 'bold-modular', iconStyle: 'bold-flat', photoStyle: 'high-impact-crop' }),
   editorial: profile('editorial', { colors: { primary: '202020', secondary: '765D4D', accent: 'C84B31', background: 'F6F1E8', surface: 'FFFDF9', text: '202020', muted: '645F58', line: 'D9D0C5', chart: ['202020', 'C84B31', '765D4D', '8B9A83'] }, typography: { display: { face: SAFE_SERIF, fallback: 'Times New Roman', size: 48 }, title: { face: SAFE_SERIF, fallback: 'Times New Roman', size: 36 }, stat: { face: SAFE_SERIF, fallback: 'Times New Roman', size: 44 } }, layout: { margin: 0.76, density: 'MEDIUM' }, radius: { card: 0 }, shadows: { card: { type: 'none' } }, shapeStyle: 'magazine', iconStyle: 'editorial-fine', photoStyle: 'documentary-magazine' }),
 };
-const rules = [['kids', /enfant|primaire|maternelle|kids|child|ludique/i], ['senior', /senior|personnes âgées|accessibilit|grand âge/i], ['tropical', /martinique|caraïbe|tropical|touris|island|île/i], ['tech', /informatique|logiciel|software|cyber|donnée|data|tech|api|ia\b|ai\b/i], ['premium', /luxe|premium|haut de gamme|luxury|prestige/i], ['social', /carousel|carrousel|instagram|linkedin|social/i], ['education', /formation|cours|éducation|education|pédagog|débutant|training/i], ['corporate', /résultat|results|business|comité|direction|investisseur|quarter|bilan/i], ['editorial', /portfolio|magazine|reportage|éditorial|editorial/i], ['minimal', /minimal|épuré|sobre/i]];
-const selectProfile = (context = '') => (rules.find(([, matcher]) => matcher.test(typeof context === 'string' ? context : JSON.stringify(context))) || ['corporate'])[0];
+const profileSignals = {
+  kids: [['eleves de cm1', 8], ['eleves de cm2', 8], ['cm1', 7], ['cm2', 7], ['maternelle', 7], ['primaire', 6], ['enfant', 5], ['enfants', 5], ['kids', 5], ['child', 5], ['ludique', 3]],
+  senior: [['personnes agees', 7], ['grand age', 7], ['senior', 6], ['accessibilite', 4]],
+  tropical: [['voyage culturel en martinique', 9], ['martinique', 7], ['caraibe', 6], ['tropical', 5], ['tourisme', 4], ['island', 4], ['ile', 3]],
+  tech: [['architecture d une application web', 9], ['architecture application web', 9], ['application web', 5], ['transformation numerique', 4], ['informatique', 5], ['logiciel', 5], ['software', 5], ['cyber', 5], ['donnee', 4], ['data', 4], ['tech', 4], ['api', 5], ['ia', 4], ['ai', 4]],
+  premium: [['haut de gamme', 7], ['luxe', 6], ['premium', 6], ['luxury', 6], ['prestige', 5]],
+  social: [['carousel', 6], ['carrousel', 6], ['instagram', 6], ['linkedin', 5], ['social', 4]],
+  education: [['formation professionnelle', 5], ['formation', 4], ['cours', 5], ['education', 5], ['pedagogie', 5], ['pedagogique', 5], ['debutant', 4], ['training', 4]],
+  corporate: [['resultats financiers annuels', 9], ['transformation digitale des pme', 8], ['transformation digitale', 6], ['resultats financiers', 7], ['comite de direction', 7], ['resultat', 5], ['resultats', 5], ['business', 5], ['direction', 4], ['manager', 4], ['managers', 4], ['investisseur', 5], ['quarter', 4], ['bilan', 5], ['pme', 3], ['entreprise', 3], ['professionnelle', 2]],
+  editorial: [['portfolio', 6], ['magazine', 5], ['reportage', 5], ['editorial', 5]],
+  minimal: [['minimal', 5], ['epure', 5], ['sobre', 3]],
+};
+const profilePriority = ['kids', 'senior', 'tropical', 'tech', 'premium', 'social', 'education', 'corporate', 'editorial', 'minimal'];
+function normalizeContext(context = '') {
+  return ` ${String(typeof context === 'string' ? context : JSON.stringify(context))
+    .normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase()
+    .replace(/[’']/g, ' ').replace(/[^a-z0-9]+/g, ' ').trim().replace(/\s+/g, ' ')} `;
+}
+function hasCompleteSignal(normalized, signal) { return normalized.includes(` ${signal} `); }
+function selectProfile(context = '') {
+  const normalized = normalizeContext(context);
+  let winner = 'corporate'; let bestScore = 0;
+  profilePriority.forEach((name) => {
+    const score = profileSignals[name].reduce((sum, [signal, weight]) => sum + (hasCompleteSignal(normalized, signal) ? weight : 0), 0);
+    if (score > bestScore) { winner = name; bestScore = score; }
+  });
+  return winner;
+}
 function finalise(theme) { theme.layout.contentWidth = theme.layout.slideWidth - (2 * theme.layout.margin); Object.assign(theme, { fontFace: theme.typography.body.face, titleFontFace: theme.typography.title.face, primary: theme.colors.primary, secondary: theme.colors.secondary, accent: theme.colors.accent, background: theme.colors.background, surface: theme.colors.surface, text: theme.colors.text, muted: theme.colors.muted, line: theme.colors.line, margin: theme.layout.margin, slideWidth: theme.layout.slideWidth, slideHeight: theme.layout.slideHeight, titleSize: theme.typography.title.size, subtitleSize: theme.typography.subtitle.size, bodySize: theme.typography.body.size, captionSize: theme.typography.caption.size }); return theme; }
 function resolveTheme(input = 'corporate') { if (typeof input === 'string') return finalise(clone(profiles[input.toLowerCase()] || profiles.corporate)); const profileName = input.profile || input.name || 'corporate'; return finalise(merge(profiles[profileName] || profiles.corporate, input)); }
 function deriveBrandTheme(brand = {}, fallbackProfile = 'corporate') { return resolveTheme({ profile: fallbackProfile, name: brand.name || `brand-${fallbackProfile}`, colors: brand.colors || {}, typography: brand.typography || {}, radius: brand.radius || {}, shadows: brand.shadows || {}, layout: brand.layout || {}, brandDerived: true }); }

@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "node tests/test-design-engine.js"
+    "test": "node tests/test-design-engine.js && node tests/test-auto-style.js",
+    "test:auto-style": "node tests/test-auto-style.js"
   },
   "keywords": [],
   "author": "",

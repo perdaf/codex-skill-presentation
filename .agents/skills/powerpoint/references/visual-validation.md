@@ -25,6 +25,7 @@ Look for:
 - inconsistent colors or color roles across slides;
 - inconsistent typography, sizing, weight, capitalization, or line spacing;
 - excessive repetition of the same layout when the narrative needs variation.
+- for diagrams and processes: reversed or ambiguous arrows, unclear attachment points, misleading grouping, unnecessary connector crossings, relationships open to incorrect interpretation, or secondary systems visually competing with the main flow;
 - monotony across the full sequence or insufficient alternation between impact, information, respiration, data, image, and comparison;
 - a missing or competing focal point, weak reading order, or hierarchy unrelated to the primary message;
 - unnecessary decorative elements, generic template styling, gratuitous cards, shadows, radii, gradients, or icons;

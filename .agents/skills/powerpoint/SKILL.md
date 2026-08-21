@@ -3,7 +3,7 @@ name: powerpoint
 description: Create, modify, and validate editable PowerPoint presentations with PptxGenJS, including Gamma-like end-to-end storytelling, art direction, visuals, and quality control. Use for PPTX decks, slides, templates, training, education, business, and social-media presentations; use imagegen for original raster visuals.
 ---
 
-# PowerPoint V4 — Presentation Design Engine
+# PowerPoint V4.1 — Presentation Design Engine
 
 Create an editable, presentation-ready `.pptx` with PptxGenJS 4.0.1. Treat “create a presentation on X” as an end-to-end design request: choose a fitting visual system, build a coherent narrative, and validate the rendered result. Do not make a slide deck a single image, rasterize editable content, or modify the `imagegen` skill. This skill is compatible with Codex CLI 0.148.0.
 

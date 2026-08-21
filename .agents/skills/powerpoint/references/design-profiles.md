@@ -21,6 +21,8 @@ All token details live in `assets/themes/index.js`: colors, six text roles, spac
 
 Use `selectProfile(context)` or the same reasoning: children → KIDS; general training/beginners → EDUCATION; seniors/accessibility → SENIOR; results/business review → CORPORATE; luxury → PREMIUM; portfolio → EDITORIAL or MINIMAL; computing/data → TECH; Martinique/tropical tourism → TROPICAL, often with EDITORIAL rhythm; carousel/social → SOCIAL. Decide and continue instead of routinely asking.
 
+The selector normalizes case, accents, punctuation, and apostrophes, then scores complete words and expressions. Do not use raw substring matching: `formation` must not match `transformation`. Strong contextual expressions outweigh isolated weak signals; for example, `formation professionnelle` may resolve to EDUCATION, while business-review or management signals can make CORPORATE the better fit.
+
 ## Controlled variation
 
 Vary one or two secondary dimensions per deck: image-led/type-led/balanced composition, secondary palette role, selected layouts, photographic crop/treatment, or LOW/MEDIUM density. Never vary primary typography, color roles, image bible, alignment logic, and shape language simultaneously. Avoid repeating the same layout consecutively unless it represents a deliberate comparison or sequence.

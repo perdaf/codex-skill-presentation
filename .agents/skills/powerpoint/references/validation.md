@@ -10,6 +10,8 @@ The first generated deck is not automatically final. After each material correct
 4. Confirm expected text is present in source or slide XML and that source asset paths exist.
 5. Confirm slide dimensions, then inspect source coordinates, sizes, image crop/contain use, font sizes, and paths for obvious out-of-bounds, missing-file, or readability problems.
 
+For a diagram or process, also perform a lightweight semantic review: verify arrow direction, connection ambiguity, logical grouping, unnecessary crossings, relationships that could be misread, and the distinction between the main flow and secondary systems. This is a guided content check, not a general architecture-understanding engine.
+
 ## Render-and-review loop
 
 When LibreOffice is available on macOS, run `node scripts/render-presentation.js presentation.pptx rendered/`; it creates a PDF and one high-resolution `slide-XX.png` per slide. Otherwise use PowerPoint or an equivalent renderer. Inspect every slide using [visual validation](visual-validation.md), correct the JavaScript source, regenerate the PPTX, and rerender. Limit the automatic build-render-review loop to three passes by default.

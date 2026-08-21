@@ -13,6 +13,15 @@ const installedPackage = JSON.parse(fs.readFileSync(path.join(path.dirname(requi
 assert.strictEqual(installedPackage.version, '4.0.1');
 assert.strictEqual(Object.keys(profiles).length, 10);
 assert.strictEqual(selectProfile('Formation ludique pour enfants'), 'kids');
+assert.strictEqual(selectProfile('formation professionnelle'), 'education');
+assert.strictEqual(selectProfile('formation professionnelle pour le comité de direction'), 'corporate');
+assert.strictEqual(selectProfile('transformation digitale des PME'), 'corporate');
+assert.notStrictEqual(selectProfile('transformation digitale des PME'), 'education');
+assert.strictEqual(selectProfile('transformation numérique'), 'tech');
+assert.strictEqual(selectProfile('élèves de CM1'), 'kids');
+assert.strictEqual(selectProfile('résultats financiers annuels'), 'corporate');
+assert.strictEqual(selectProfile("architecture d'une application web"), 'tech');
+assert.strictEqual(selectProfile('voyage culturel en Martinique'), 'tropical');
 assert.strictEqual(selectProfile('Résultats trimestriels du comité de direction'), 'corporate');
 assert.strictEqual(selectProfile('Voyage photographique en Martinique'), 'tropical');
 assert.strictEqual(resolveTheme('senior').typography.body.size >= 23, true);

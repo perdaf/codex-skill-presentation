@@ -2,6 +2,13 @@
 
 Before generating a set, write a compact visual bible and reuse it verbatim in every image prompt. Include medium/style, light, palette, contrast, lens or perspective, texture, realism, framing, treatment, mood, and exclusions. Derive these choices from the active profile and brand. The bible controls coherence; the scene-specific suffix controls subject matter.
 
+For several images in one visual universe, split the visual bible into two explicit blocks:
+
+- **INVARIANTS:** style, palette, texture, light, detail level, treatment, recurring characters, and their proportions or visual personality;
+- **VARIABLES:** scene, action, framing, composition, and subject position.
+
+Repeat the invariants explicitly in every successive image prompt. Change only the variables required by the target slide. When recurring characters appear, preserve their identifying features and proportions rather than merely requesting “the same style.”
+
 Every prompt must also describe its destination region and crop tolerance:
 
 - right-side image with text left: place the subject toward the right third and preserve calm negative space on the left;
