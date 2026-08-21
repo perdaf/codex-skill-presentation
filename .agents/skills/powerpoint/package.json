@@ -4,9 +4,15 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "node tests/test-design-engine.js && node tests/test-auto-style.js && node tests/test-teaching-engine.js",
+    "test": "node tests/test-design-engine.js && node tests/test-auto-style.js && node tests/test-teaching-engine.js && node tests/test-brand-layer.js && node tests/test-brand-runtime.js && node tests/test-visual-intelligence.js && node tests/test-visual-opportunity.js && node tests/test-visual-expression.js && node tests/test-deck-visual-diversity.js && node tests/test-intent-layer.js && node tests/test-context-layer.js && node tests/test-connector-reliability.js && node tests/test-icon-recognizability.js && node tests/test-context-visual-runtime.js",
     "test:auto-style": "node tests/test-auto-style.js",
-    "test:teaching": "node tests/test-teaching-engine.js"
+    "test:teaching": "node tests/test-teaching-engine.js",
+    "test:brand": "node tests/test-brand-layer.js",
+    "test:brand-runtime": "node tests/test-brand-runtime.js",
+    "test:visual": "node tests/test-visual-intelligence.js && node tests/test-visual-opportunity.js && node tests/test-visual-expression.js && node tests/test-deck-visual-diversity.js",
+    "test:intent": "node tests/test-intent-layer.js",
+    "test:context": "node tests/test-context-layer.js",
+    "test:reliability": "node tests/test-connector-reliability.js && node tests/test-icon-recognizability.js && node tests/test-context-visual-runtime.js"
   },
   "keywords": [],
   "author": "",

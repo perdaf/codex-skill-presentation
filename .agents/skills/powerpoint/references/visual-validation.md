@@ -1,5 +1,11 @@
 # Visual validation
 
+For projection, explicitly ask whether a mainly textual slide contains a `HIGH` `VISUAL_OPPORTUNITY` that has not been used. If so, reconsider the representation before adding imagery: diagram, process, comparison, spatial relation, controlled pictogram, chart, or—only for an appropriate editorial scene—ImageGen. Preserve audience accessibility and do not transform every list into a visual.
+
+In V4.4.1, also validate `VISUAL_EXPRESSION` and `READ_SEE_BALANCE`. Correct role/method classification is insufficient when a high-opportunity projection slide remains `READ_ONLY` or `READ_MOSTLY`. Inspect the whole deck for `HIGH_VISUAL_OPPORTUNITY_READ_MOSTLY`, `REPETITIVE_TEXT_CARDS`, `LOW_VISUAL_VARIETY`, `IMAGEGEN_OVERUSE`, `DECORATIVE_VISUAL`, and `SENIOR_VISUAL_OVERLOAD`. For each important slide ask: if some text disappeared, would its objects or spatial relationships still communicate anything meaningful?
+
+For important connectors, verify the actual endpoint, intended target, direction, neighboring ambiguity, crossings through text, and floating endpoints. For SENIOR functional icons, hide the label mentally: if a digitally inexperienced senior could not reasonably infer the meaning, use a clearer object, universal symbol, controlled vector, or explicit text treatment.
+
 Use this review after rendering a deck into `rendered/`. Inspect every `slide-XX.png`; a successful command is not visual approval.
 
 ## Compare against the intended presentation

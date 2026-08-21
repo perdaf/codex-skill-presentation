@@ -2,6 +2,8 @@
 
 Before generating a set, write a compact visual bible and reuse it verbatim in every image prompt. Include medium/style, light, palette, contrast, lens or perspective, texture, realism, framing, treatment, mood, and exclusions. Derive these choices from the active profile and brand. The bible controls coherence; the scene-specific suffix controls subject matter.
 
+Also record `BRAND`, `PROFILE`, `CONTENT_DEPTH`, `DELIVERY_MODE`, `VISUAL_OPPORTUNITY`, `VISUAL_ROLE`, `IMAGE_METHOD`, `VISUAL_EXPRESSION`, `READ_SEE_BALANCE`, `COMPOSITION`, `SUBJECT_POSITION`, `NEGATIVE_SPACE`, `CROP_STRATEGY`, `STYLE_INVARIANTS`, and `SCENE_VARIABLES`. Use `createVisualManifest()` and `visualBibleToMarkdown()` from `assets/visual-bible.js` so important decisions populate the Visual Bible automatically. Determine layout and composition before writing an ImageGen prompt; a subject-only prompt is insufficient for slide-bound imagery.
+
 For several images in one visual universe, split the visual bible into two explicit blocks:
 
 - **INVARIANTS:** style, palette, texture, light, detail level, treatment, recurring characters, and their proportions or visual personality;
