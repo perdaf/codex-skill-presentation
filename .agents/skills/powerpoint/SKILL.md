@@ -1,9 +1,9 @@
 ---
 name: powerpoint
-description: Create, modify, and validate editable PowerPoint presentations and print-ready A4 learning handouts, including storytelling, pedagogy, art direction, visuals, and quality control. Use for PPTX decks, slides, training, education, business, social-media presentations, and dual projection/handout courses; use imagegen for original raster visuals.
+description: Create, modify, and validate editable PowerPoint presentations and print-ready A4 learning handouts, including storytelling, pedagogy, art direction, visuals, and quality control. Use for PPTX decks, slides, training, education, business, social-media presentations, and dual projection/handout courses; use the runtime's native image-generation capability for original raster visuals when available.
 ---
 
-# PowerPoint V4.5 — Context Layer & Senior Visual Reliability
+# PowerPoint V4.5.1 — Cross-Runtime Compatibility
 
 Create editable, presentation-ready `.pptx` files with PptxGenJS 4.0.1 and, when requested, autonomous print-ready A4 handout PDFs derived from the same course content. Treat “create a presentation on X” as an end-to-end design request; treat a training request as both a content-design and delivery-design problem. Do not rasterize editable content or modify the `imagegen` skill. This skill is compatible with Codex CLI 0.148.0.
 
@@ -17,14 +17,16 @@ V4.4.1 adds `VISUAL_EXPRESSION` and deck-level projection-richness checks after 
 
 V4.5 adds an optional Context Layer before intent resolution and focused reliability checks after composition. Context supplies reusable environment defaults without replacing intent. Important connectors must reach their declared targets, and SENIOR functional icons must remain recognizable without relying on unfamiliar abstract conventions.
 
+V4.5.1 makes raster generation runtime-independent without changing the V4.5 engines. Visual Intelligence selects the logical `NATIVE_IMAGE_GENERATION` capability for `IMAGE_METHOD=IMAGEGEN`; the active agent runtime resolves that capability to a callable native tool. In Codex this may be `imagegen`; in Antigravity it may be `default_api:generate_image`; other Agent Skills runtimes may expose another declared compatible provider.
+
 ## Non-negotiable constraints
 
 - Use PptxGenJS as the primary engine. Keep titles, text, shapes, tables, charts, simple diagrams, lines, and practical icons editable.
-- For original photos, illustrations, and backgrounds, follow the image-generation decision tree in [image generation](references/image-generation.md). A listed `imagegen` skill does **not** prove that its built-in tool is callable in this session. Store every generated result under `assets/images/` and integrate it using PptxGenJS; do not use an external image-generation API when the built-in `imagegen` tool is actually callable.
+- For original photos, illustrations, and backgrounds, follow the image-generation decision tree in [image generation](references/image-generation.md). A listed skill or presumed tool name does **not** prove that a native image-generation capability is callable in this session. Store every generated result under `assets/images/` and integrate it using PptxGenJS; do not use the API fallback when a compatible native capability is callable.
 - Preserve an existing deck’s dimensions, theme, layouts, content, and visual identity unless asked to redesign it. Use a supplied template as the base when practical.
 - Keep JavaScript and every generated or supplied asset. Do not delete source files or flatten a deck without explicit permission.
 - Default to `LAYOUT_WIDE` (13.333 × 7.5 in, 16:9), except where the request, a template, or a social format calls for another size.
-- Preserve V3 behavior: decks may use no images; charts and diagrams remain editable; imagegen and the `gpt-image-2` fallback remain available; LibreOffice rendering, PNG inspection, source preservation, structural checks, and the three-pass correction limit remain mandatory when applicable.
+- Preserve V3 behavior: decks may use no images; charts and diagrams remain editable; native raster generation and the `gpt-image-2` fallback remain available; LibreOffice rendering, PNG inspection, source preservation, structural checks, and the three-pass correction limit remain mandatory when applicable.
 - Keep content separate from rendering for training work. Resolve `CONTENT_DEPTH`, `DELIVERY_MODE`, and `PAGE_BUDGET` with [Teaching & Handout Engine](references/teaching-handout-engine.md) before storyboarding.
 
 ## Workflow
@@ -36,7 +38,7 @@ The first PPTX is a draft, not automatically final.
 3. **Select the visual system:** choose the audience profile first. If a named brand is requested, resolve and merge it afterward without reducing profile accessibility or teaching constraints. See [Brand Layer](references/brand-layer.md), [design profiles](references/design-profiles.md), [composition engine](references/composition-engine.md), and [design system](references/design-system.md).
 4. **Plan pedagogy, storyboard, and rhythm:** define learning objectives and progression before mapping the master content to projection slides and/or A4 pages. Apply pedagogical compression rather than deleting essential explanations or shrinking type.
 5. **Art direction:** instantiate or adapt a token theme for palette, typography, spacing, grid, shapes, icons, photographic treatment, and a print-friendly handout adaptation when applicable.
-6. **Assets:** assess `VISUAL_OPPORTUNITY`, then classify each actual visual need with [Visual Intelligence](references/visual-intelligence.md). Record important decisions in the visual manifest. Before generating originals, write the enriched visual bible. Make ImageGen prompts aware of narrative role, target region, text position, crop, preserved elements, focal placement, and negative space. Prefer built-in `imagegen`; use the existing fallback only under its current rules.
+6. **Assets:** assess `VISUAL_OPPORTUNITY`, then classify each actual visual need with [Visual Intelligence](references/visual-intelligence.md). Record important decisions in the visual manifest. Before generating originals, write the enriched visual bible. Make ImageGen prompts aware of narrative role, target region, text position, crop, preserved elements, focal placement, and negative space. Prefer the runtime's callable `NATIVE_IMAGE_GENERATION` capability; use the existing fallback only under the rules in [image generation](references/image-generation.md).
 7. **Build:** compose projection slides with existing theme-aware [components](assets/presentation-components.js) and [layouts](assets/layouts.js). Build handouts as genuine A4 pages rather than slide printouts. Preserve editable source material and follow [PptxGenJS conventions](references/pptxgenjs-conventions.md).
 8. **Validate and improve:** run pedagogical validation before visual validation. For handouts, also validate print format and autonomy. Correct sources and rerender, retaining the existing three-pass maximum.
 9. **Deliver:** provide the requested outputs and keep JavaScript, master content, assets, PDF, PPTX, and renders needed for reproduction.

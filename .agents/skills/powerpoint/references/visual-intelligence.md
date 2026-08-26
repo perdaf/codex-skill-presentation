@@ -62,6 +62,8 @@ Classify the visual by function before choosing a method. Use `assets/visual-int
 | `REAL_INTERFACE` | `SCREENSHOT` |
 | `DECORATIVE` | `OPTIONAL` |
 
+For `EDITORIAL_SCENE`, interpret `IMAGEGEN` as a visual method, then resolve execution separately: `VISUAL_ROLE → IMAGE_METHOD → CAPABILITY → RUNTIME TOOL`. The preferred capability is `NATIVE_IMAGE_GENERATION`; the active runtime maps it to whichever compatible native provider is actually callable. Keep `IMAGE_METHOD=IMAGEGEN` in the manifest so it remains portable and does not encode a physical tool name. If native raster generation is unavailable, follow [image generation](image-generation.md) for API fallback eligibility or `NO_RASTER_GENERATION`.
+
 Editability is a functional quality, not an absolute goal. Do not replace a premium editorial scene with simplistic PowerPoint shapes merely to keep it editable. Conversely, do not use ImageGen for exact diagrams, processes, charts, or an interface presented as real. If no reliable interface capture exists, use a clearly labeled pedagogical schematic or text; never invent the interface.
 
 Before ImageGen, resolve narrative role, layout, text position, subject position, negative space, framing, orientation, crop strategy, protected elements, and relationship to slide objects. `buildCompositionAwarePrompt()` converts these decisions into prompt guidance. Generated images must not contain important text, logos, watermarks, or invented software UI.
