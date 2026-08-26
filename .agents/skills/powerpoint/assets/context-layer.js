@@ -2,6 +2,7 @@
 
 const { resolveContext } = require('./contexts');
 const { normalizeText, detectIntent, detectAudience, resolveIntent } = require('./intent-layer');
+const { resolveAudienceRepresentation } = require('./audience-representation');
 
 function hasExplicitEpnOptOut(request) {
   const text = normalizeText(request);
@@ -32,15 +33,25 @@ function applyContext(request, contextValue, options = {}) {
 function mergeContextWithIntent(request, contextValue = null, options = {}) {
   const applied = applyContext(request, contextValue, options);
   const resolved = resolveIntent(request, applied.structuredExplicit, applied.resolverOptions);
+  const representation = resolveAudienceRepresentation({
+    request,
+    ...(Object.prototype.hasOwnProperty.call(options.explicit || {}, 'audienceRepresentation') ? { explicit: options.explicit.audienceRepresentation } : {}),
+    ...(Object.prototype.hasOwnProperty.call(options.contextOverrides || {}, 'audienceRepresentation') ? { contextOverride: options.contextOverrides.audienceRepresentation } : {}),
+    contextDefault: applied.context?.audienceRepresentation,
+    inferred: options.inferredAudienceRepresentation,
+  });
   const contextSource = options.source || (applied.context ? 'ACTIVE_CONTEXT' : 'NONE');
   return {
     ...resolved,
+    audienceRepresentation: representation.value,
+    humanRepresentationEnabled: representation.peopleAllowed,
     context: applied.context?.id || null,
     contextSource,
     resolutionTrace: {
       ...resolved.resolutionTrace,
       priority: ['EXPLICIT_USER', 'EXPLICIT_CONTEXT_OVERRIDE', 'ACTIVE_CONTEXT', 'PRESET', 'INFERENCE', 'DEFAULT'],
       context: { id: applied.context?.id || null, source: contextSource, inherited: applied.inherited, overrides: applied.overrides },
+      audienceRepresentation: { value: representation.value, source: representation.source, peopleAllowed: representation.peopleAllowed },
     },
   };
 }

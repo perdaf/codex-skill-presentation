@@ -19,6 +19,20 @@ V4.5 adds an optional Context Layer before intent resolution and focused reliabi
 
 V4.5.1 makes raster generation runtime-independent without changing the V4.5 engines. Visual Intelligence selects the logical `NATIVE_IMAGE_GENERATION` capability for `IMAGE_METHOD=IMAGEGEN`; the active agent runtime resolves that capability to a callable native tool. In Codex this may be `imagegen`; in Antigravity it may be `default_api:generate_image`; other Agent Skills runtimes may expose another declared compatible provider.
 
+When `EPN_RIVIERE_SALEE_CONTEXT` is active, its art-direction default `AUDIENCE_REPRESENTATION=MARTINIQUE` applies only to visuals that genuinely contain people. Explicit user representation or an explicit request for no characters takes priority. Keep this parameter separate from the pedagogical audience profile and from runtime image-tool resolution.
+
+## Mandatory resolution pipeline
+
+Every runtime using this skill **MUST resolve configuration before deck composition**:
+
+`USER REQUEST → ACTIVE CONTEXT → resolveRequestWithContext() → RESOLVED CONFIGURATION → Teaching / Brand / Visual Intelligence → Visual Bible / Visual Manifest → composition → asset generation → validation`
+
+When an organizational context is explicitly supplied or available in the working environment, pass it to `resolveRequestWithContext()` before the Intent Layer. For an EPN de Rivière-Salée project that declares `EPN_RIVIERE_SALEE_CONTEXT`, pass that exact context; never infer it for every PowerPoint project. After resolution, the returned `brand`, `profile`, `contentDepth`, `deliveryMode`, `pageBudget`, and `audienceRepresentation` are the source of truth. Do not manually reconstruct them.
+
+Before generating an `EDITORIAL_SCENE`, the agent **MUST** run Visual Intelligence, construct the relevant Visual Bible invariants and Visual Manifest, merge those invariants into the final prompt, and only then resolve and call `NATIVE_IMAGE_GENERATION`. The shortcut `USER REQUEST → manual image prompt → generator` is prohibited whenever the deterministic layers contain relevant information. The concrete runtime provider is selected only after `VISUAL_ROLE → IMAGE_METHOD → CAPABILITY`.
+
+Use [Mandatory execution contract](references/execution-contract.md) and `assets/mandatory-pipeline.js` for the required trace and fail-safe behavior. If a mandatory stage cannot run, reuse an unambiguous structured resolved configuration or report the explicit blocked state; never silently approximate or drop `HUMAN_REPRESENTATION`.
+
 ## Non-negotiable constraints
 
 - Use PptxGenJS as the primary engine. Keep titles, text, shapes, tables, charts, simple diagrams, lines, and practical icons editable.
@@ -33,7 +47,7 @@ V4.5.1 makes raster generation runtime-independent without changing the V4.5 eng
 
 The first PPTX is a draft, not automatically final.
 
-1. **Resolve context and intent:** when an active context exists, apply the [Context Layer](references/context-layer.md) before translating the request through the [Intent & Preset Layer](references/intent-layer.md). Preserve subject, audience, duration, objectives, prerequisites, exclusions, explicit constraints, preset, inference, ambiguity, research strategy, and budget tension. Context never overrides an explicit user constraint.
+1. **Resolve context and intent:** execute the mandatory resolution pipeline above. When an active context exists, apply the [Context Layer](references/context-layer.md) before translating the request through the [Intent & Preset Layer](references/intent-layer.md). Preserve subject, audience, duration, objectives, prerequisites, exclusions, explicit constraints, preset, inference, ambiguity, research strategy, and budget tension. Context never overrides an explicit user constraint.
 2. **Research and master content when needed:** for `DETAILED`, `ULTRA_DETAILED`, or `DUAL`, establish the factual content and pedagogical progression before design. In `DUAL`, both outputs must derive from one master source; preserve it as `content/course-content.md`.
 3. **Select the visual system:** choose the audience profile first. If a named brand is requested, resolve and merge it afterward without reducing profile accessibility or teaching constraints. See [Brand Layer](references/brand-layer.md), [design profiles](references/design-profiles.md), [composition engine](references/composition-engine.md), and [design system](references/design-system.md).
 4. **Plan pedagogy, storyboard, and rhythm:** define learning objectives and progression before mapping the master content to projection slides and/or A4 pages. Apply pedagogical compression rather than deleting essential explanations or shrinking type.
@@ -94,6 +108,7 @@ Respect the grid, safe margins, alignment, vertical rhythm, proportions, hierarc
 
 ## Reference routing
 
+- Read [Mandatory execution contract](references/execution-contract.md) before composing any deck or generating any asset.
 - Read [design system](references/design-system.md) for visual-direction decisions.
 - Read [design profiles](references/design-profiles.md) when selecting or adapting a visual profile.
 - Read [composition engine](references/composition-engine.md) for brand mode, composition, and anti-patterns.

@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "node tests/test-design-engine.js && node tests/test-auto-style.js && node tests/test-teaching-engine.js && node tests/test-brand-layer.js && node tests/test-brand-runtime.js && node tests/test-visual-intelligence.js && node tests/test-visual-opportunity.js && node tests/test-visual-expression.js && node tests/test-deck-visual-diversity.js && node tests/test-intent-layer.js && node tests/test-context-layer.js && node tests/test-connector-reliability.js && node tests/test-icon-recognizability.js && node tests/test-context-visual-runtime.js && node tests/test-image-generation-runtime.js && node tests/test-v45-engine-integrity.js",
+    "test": "node tests/test-design-engine.js && node tests/test-auto-style.js && node tests/test-teaching-engine.js && node tests/test-brand-layer.js && node tests/test-brand-runtime.js && node tests/test-visual-intelligence.js && node tests/test-visual-opportunity.js && node tests/test-visual-expression.js && node tests/test-deck-visual-diversity.js && node tests/test-intent-layer.js && node tests/test-context-layer.js && node tests/test-connector-reliability.js && node tests/test-icon-recognizability.js && node tests/test-context-visual-runtime.js && node tests/test-image-generation-runtime.js && node tests/test-audience-representation.js && node tests/test-mandatory-pipeline.js && node tests/test-v45-engine-integrity.js",
     "test:auto-style": "node tests/test-auto-style.js",
     "test:teaching": "node tests/test-teaching-engine.js",
     "test:brand": "node tests/test-brand-layer.js",
