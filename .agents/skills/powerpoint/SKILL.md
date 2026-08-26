@@ -3,7 +3,7 @@ name: powerpoint
 description: Create, modify, and validate editable PowerPoint presentations and print-ready A4 learning handouts, including storytelling, pedagogy, art direction, visuals, and quality control. Use for PPTX decks, slides, training, education, business, social-media presentations, and dual projection/handout courses; use the runtime's native image-generation capability for original raster visuals when available.
 ---
 
-# PowerPoint V4.5.1 — Cross-Runtime Compatibility
+# PowerPoint V4.5.2 — Targeted Edit Layer
 
 Create editable, presentation-ready `.pptx` files with PptxGenJS 4.0.1 and, when requested, autonomous print-ready A4 handout PDFs derived from the same course content. Treat “create a presentation on X” as an end-to-end design request; treat a training request as both a content-design and delivery-design problem. Do not rasterize editable content or modify the `imagegen` skill. This skill is compatible with Codex CLI 0.148.0.
 
@@ -20,6 +20,22 @@ V4.5 adds an optional Context Layer before intent resolution and focused reliabi
 V4.5.1 makes raster generation runtime-independent without changing the V4.5 engines. Visual Intelligence selects the logical `NATIVE_IMAGE_GENERATION` capability for `IMAGE_METHOD=IMAGEGEN`; the active agent runtime resolves that capability to a callable native tool. In Codex this may be `imagegen`; in Antigravity it may be `default_api:generate_image`; other Agent Skills runtimes may expose another declared compatible provider.
 
 When `EPN_RIVIERE_SALEE_CONTEXT` is active, its art-direction default `AUDIENCE_REPRESENTATION=MARTINIQUE` applies only to visuals that genuinely contain people. Explicit user representation or an explicit request for no characters takes priority. Keep this parameter separate from the pedagogical audience profile and from runtime image-tool resolution.
+
+V4.5.2 adds `EDIT_MODE=TARGETED` for precise natural-language changes to an existing skill-generated project. Its invariant is **WHAT IS NOT REQUESTED MUST NOT CHANGE**. Targeted editing is additive and does not rerun AUTO STYLE, profile, brand, page budget, storyboard, global art direction, or the full creation workflow.
+
+## Targeted edit contract
+
+When a request targets an existing presentation, follow:
+
+`EXISTING PROJECT → EDIT REQUEST → TARGET RESOLUTION → CHANGE CLASSIFICATION → IMPACT ANALYSIS → TARGETED PATCH → REGENERATION → TARGETED VALIDATION → REGRESSION CHECK`
+
+Build an inspectable patch plan with `assets/targeted-edit.js` before editing. Prefer `presentation.js` as the source of truth and regenerate the PPTX; never patch PPTX OOXML directly when the JS source exists. Resolve only the named slides and elements. If the project evidence yields multiple materially different matches, return `AMBIGUOUS_TARGET` and clarify rather than modifying all matches.
+
+Preserve every slide, element, layout, style, brand decision, and output not named by the request. A minimal local adjustment is allowed only to prevent overflow, collision, clipping, off-slide placement, or loss of readability, and must be reported. A request about a slide affects projection only unless the handout is explicitly named.
+
+After any targeted edit affecting text, run `validateTargetedEditReadability()` from `assets/targeted-edit-readability.js`. Do not accept technical fit achieved through excessive type reduction or compression. Respect the active profile's minimum size, projection readability, density, neighbor clearance, and hierarchy; `SENIOR` accessibility overrides exact geometry preservation. Try text-box expansion, then local layout adaptation, then an authorized meaning-equivalent shortening. If none passes, return `TARGETED_EDIT_READABILITY_REGRESSION` and request a decision. This gate never authorizes global recomposition or automatic handout/master-content changes.
+
+Explicit user edits override prior automatic visual choices. A requested generated-image replacement must retain local geometry as far as practical and route through Visual Intelligence and the existing Mandatory Pipeline before `NATIVE_IMAGE_GENERATION`; do not rebuild the slide. For pedagogical or informational changes, report `CONSISTENCY_IMPACT` across master content, handout, and other occurrences. Propagate only when explicitly requested; otherwise surface a material divergence for confirmation.
 
 ## Mandatory resolution pipeline
 
@@ -108,6 +124,7 @@ Respect the grid, safe margins, alignment, vertical rhythm, proportions, hierarc
 
 ## Reference routing
 
+- Read [Targeted Edit Layer](references/targeted-edit-layer.md) for any modification to an existing deck.
 - Read [Mandatory execution contract](references/execution-contract.md) before composing any deck or generating any asset.
 - Read [design system](references/design-system.md) for visual-direction decisions.
 - Read [design profiles](references/design-profiles.md) when selecting or adapting a visual profile.
