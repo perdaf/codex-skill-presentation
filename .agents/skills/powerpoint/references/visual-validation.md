@@ -8,6 +8,8 @@ For important connectors, verify the actual endpoint, intended target, direction
 
 Use this review after rendering a deck into `rendered/`. Inspect every `slide-XX.png`; a successful command is not visual approval.
 
+For HTML, render every 16:9 state at least once and inspect every base slide. Also inspect pedagogically material interaction states—revealed sequence, answer, highlight, or before/after endpoints—when their appearance can introduce overflow, collision, contrast, or hierarchy defects. Browser success is not visual approval.
+
 ## Compare against the intended presentation
 
 Review each slide against its storyboard objective, main message, planned layout, and transition, as well as the deck's art direction: palette, typography, spacing, imagery, tone, and audience. Validate both technical correctness and overall visual quality. A technically intact slide still needs correction when its composition, hierarchy, pacing, or visual language weakens the story.

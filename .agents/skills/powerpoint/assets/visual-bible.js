@@ -2,10 +2,15 @@
 
 const { assessVisualOpportunity, classifyVisual, resolveVisualExpression, assessProjectionRichness, resolveComposition } = require('./visual-intelligence');
 const { resolveBrand } = require('./brands');
+const { normalizeValue, humanRepresentationInvariant } = require('./audience-representation');
 
 function createVisualBible(input = {}) {
   const brand = resolveBrand(input.brand); const classification = classifyVisual(input.visualRole || 'DECORATIVE', input);
   const opportunity = assessVisualOpportunity(input.visualOpportunityInput || input);
+  const audienceRepresentation = classification.visualRole === 'EDITORIAL_SCENE' && input.hasPeople === true
+    ? normalizeValue(input.audienceRepresentation)
+    : null;
+  const humanRepresentation = humanRepresentationInvariant(audienceRepresentation);
   return {
     BRAND: brand ? brand.id : null, PROFILE: String(input.profile || 'corporate').toUpperCase(),
     CONTENT_DEPTH: String(input.contentDepth || 'SIMPLE').toUpperCase(), DELIVERY_MODE: String(input.deliveryMode || 'PRESENTATION').toUpperCase(),
@@ -13,6 +18,8 @@ function createVisualBible(input = {}) {
     COMPOSITION: resolveComposition(input.composition || {}), SUBJECT_POSITION: String(input.composition?.subjectPosition || (input.composition?.textPosition === 'RIGHT' ? 'LEFT' : 'RIGHT')).toUpperCase(),
     NEGATIVE_SPACE: String(input.composition?.negativeSpace || input.composition?.textPosition || 'LEFT').toUpperCase(),
     CROP_STRATEGY: input.composition?.cropStrategy || 'PRESERVE_FOCAL_SUBJECT',
+    ...(audienceRepresentation ? { AUDIENCE_REPRESENTATION: audienceRepresentation } : {}),
+    ...(humanRepresentation ? { HUMAN_REPRESENTATION: humanRepresentation } : {}),
     STYLE_INVARIANTS: Object.freeze([...(input.styleInvariants || [])]), SCENE_VARIABLES: Object.freeze([...(input.sceneVariables || [])]),
   };
 }
@@ -66,7 +73,8 @@ function createVisualManifest(initialEntries = []) {
 }
 
 function visualBibleToMarkdown(bible, manifest = null) {
-  const fields = ['BRAND', 'PROFILE', 'CONTENT_DEPTH', 'DELIVERY_MODE', 'VISUAL_OPPORTUNITY', 'VISUAL_ROLE', 'IMAGE_METHOD'];
+  const fields = ['BRAND', 'PROFILE', 'CONTENT_DEPTH', 'DELIVERY_MODE', 'VISUAL_OPPORTUNITY', 'VISUAL_ROLE', 'IMAGE_METHOD',
+    ...(bible.AUDIENCE_REPRESENTATION ? ['AUDIENCE_REPRESENTATION'] : []), ...(bible.HUMAN_REPRESENTATION ? ['HUMAN_REPRESENTATION'] : [])];
   const body = ['# Visual Bible', '', ...fields.map((field) => `- ${field}: ${bible[field] ?? ''}`)];
   if (manifest) body.push('', manifest.toMarkdown());
   return body.join('\n');

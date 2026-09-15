@@ -2,6 +2,8 @@
 
 V4.4 translates natural-language requests into configuration for the existing engines. It does not replace AUTO STYLE, Teaching, Brand, Visual Intelligence, ImageGen, rendering, or validation.
 
+V4.6 preserves `resolveIntent()` and wraps it with `resolveV46Intent()` from `assets/presentation-format.js`. The wrapper adds `PRESENTATION_FORMAT`, technical deliverables, resolution trace, and the material projection question without changing V4.4 intent/preset behavior. See [Web Presentation Engine](web-presentation-engine.md).
+
 ## Resolution order
 
 Always apply:

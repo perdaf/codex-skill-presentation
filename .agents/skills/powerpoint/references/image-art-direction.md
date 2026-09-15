@@ -2,7 +2,9 @@
 
 Before generating a set, write a compact visual bible and reuse it verbatim in every image prompt. Include medium/style, light, palette, contrast, lens or perspective, texture, realism, framing, treatment, mood, and exclusions. Derive these choices from the active profile and brand. The bible controls coherence; the scene-specific suffix controls subject matter.
 
-Also record `BRAND`, `PROFILE`, `CONTENT_DEPTH`, `DELIVERY_MODE`, `VISUAL_OPPORTUNITY`, `VISUAL_ROLE`, `IMAGE_METHOD`, `VISUAL_EXPRESSION`, `READ_SEE_BALANCE`, `COMPOSITION`, `SUBJECT_POSITION`, `NEGATIVE_SPACE`, `CROP_STRATEGY`, `STYLE_INVARIANTS`, and `SCENE_VARIABLES`. Use `createVisualManifest()` and `visualBibleToMarkdown()` from `assets/visual-bible.js` so important decisions populate the Visual Bible automatically. Determine layout and composition before writing an ImageGen prompt; a subject-only prompt is insufficient for slide-bound imagery.
+Also record `BRAND`, `PROFILE`, `CONTENT_DEPTH`, `DELIVERY_MODE`, `VISUAL_OPPORTUNITY`, `VISUAL_ROLE`, `IMAGE_METHOD`, `VISUAL_EXPRESSION`, `READ_SEE_BALANCE`, `COMPOSITION`, `SUBJECT_POSITION`, `NEGATIVE_SPACE`, `CROP_STRATEGY`, `STYLE_INVARIANTS`, and `SCENE_VARIABLES`. `IMAGE_METHOD=IMAGEGEN` describes the visual method and remains independent of the physical runtime tool. For execution, resolve `IMAGEGEN → NATIVE_IMAGE_GENERATION → runtime tool`, using the callable native provider declared by the current environment. Use `createVisualManifest()` and `visualBibleToMarkdown()` from `assets/visual-bible.js` so important decisions populate the Visual Bible automatically. Determine layout and composition before writing an ImageGen prompt; a subject-only prompt is insufficient for slide-bound imagery.
+
+For an `EDITORIAL_SCENE` that actually contains people, also transmit the resolved `AUDIENCE_REPRESENTATION`. Under `EPN_RIVIERE_SALEE_CONTEXT`, default to `MARTINIQUE` unless the user explicitly requests another representation or no characters. Record `AUDIENCE_REPRESENTATION: MARTINIQUE` and the human invariant `contemporary Martinican / Afro-Caribbean representation, natural and non-stereotypical`. Apply the same invariant through every runtime provider. Omit both fields when the visual has no people.
 
 For several images in one visual universe, split the visual bible into two explicit blocks:
 
@@ -20,4 +22,4 @@ Every prompt must also describe its destination region and crop tolerance:
 - portrait/card: request the card ratio, headroom, and safe facial crop;
 - image grid: use compatible perspective, scale, light, and color treatment across all cells.
 
-Generate for the target layout rather than forcing a finished image into an incompatible crop. Avoid generic stock-photo concepts, embedded words, watermarks, logos, charts, diagrams, or other content that should remain editable. Follow `image-generation.md` for tool choice and the `gpt-image-2` fallback.
+Generate for the target layout rather than forcing a finished image into an incompatible crop. Avoid generic stock-photo concepts, embedded words, watermarks, logos, charts, diagrams, or other content that should remain editable. Follow `image-generation.md` for capability resolution and the `gpt-image-2` fallback; do not assume a universal native tool name.

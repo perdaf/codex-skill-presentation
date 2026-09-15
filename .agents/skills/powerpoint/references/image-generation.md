@@ -4,13 +4,15 @@ Use this procedure only when a presentation genuinely benefits from original ras
 
 ## Decision tree
 
-1. Determine whether the current session exposes a callable built-in `imagegen` tool. Do not infer availability from the presence of the `imagegen` skill, from a local `SKILL.md`, or from a presumed tool name. A tool is available only when it is exposed and can be invoked in the session.
-2. If the built-in tool is callable, use it according to the `imagegen` skill. Save/copy each selected result into the presentation's `assets/images/` directory, then reference that project-local file from PptxGenJS.
-3. If the built-in tool is not callable, check only whether `process.env.OPENAI_API_KEY` is non-empty. Never print the value, put it in a command line, write it to a file, or add it to the project.
-4. If the environment variable is available, run `scripts/generate-image.js`. The script calls the OpenAI Images API using `gpt-image-2`, the currently recommended API image model at the time this skill was updated. It accepts either a single prompt/output pair or a JSON manifest for multiple distinct prompts.
-5. If neither option is available, use temporary editable shapes only where practical, label the internal asset status accurately, and say in the delivery note that original images were not generated.
+1. Complete the [mandatory execution contract](execution-contract.md): resolve context and intent, run Visual Intelligence, construct Visual Bible/Manifest, and build the final invariant-aware prompt. Never jump directly from the user request to a hand-written image prompt.
+2. Resolve the logical capability `NATIVE_IMAGE_GENERATION` from the callable tools actually exposed by the current agent runtime. Do not infer availability from an installed skill, local documentation, or one presumed universal tool name. In Codex the concrete tool may be `imagegen`; in Antigravity it may be `default_api:generate_image`; another runtime may declare a different compatible provider.
+3. If `NATIVE_IMAGE_GENERATION` is callable, use the runtime's normal invocation mechanism and instructions. Save/copy each selected result into the presentation's `assets/images/` directory, then reference that project-local file from PptxGenJS.
+4. If no compatible native capability is callable, check only whether `process.env.OPENAI_API_KEY` is non-empty and whether the runtime's current network permissions allow the API request. Never print the key, put it in a command line, write it to a file, modify it, or add it to the project.
+5. Only when both conditions hold, `OPENAI_API_FALLBACK` is eligible through `scripts/generate-image.js`. The script calls the OpenAI Images API using `gpt-image-2` and accepts either a single prompt/output pair or a JSON manifest for multiple distinct prompts. Eligibility and success also depend on runtime policy, API quota, and rights to the model.
+6. Never request or enable `BypassSandbox`, a sandbox workaround, or silent privilege elevation. If the runtime requires authorization, use only its normal authorization flow; if that authorization is unavailable or declined, abandon the API fallback cleanly.
+7. If neither raster path is available, return `NO_RASTER_GENERATION`. Continue with existing V4.5 native PowerPoint, SVG/vector, diagram, or pedagogical-object methods when pedagogically acceptable. Do not replace a true `EDITORIAL_SCENE` with a weak PowerPoint illustration unless no better capability is available.
 
-Do not ask a user to paste a key into chat. A configured environment variable is the only credential source for the fallback.
+Do not ask a user to paste a key into chat. A configured environment variable is the only credential source for the fallback. `assets/image-generation-runtime.js` models this selection without invoking a provider or inspecting the secret value.
 
 ## Art direction for a set of images
 
@@ -50,4 +52,4 @@ node .agents/skills/powerpoint/scripts/generate-image.js --manifest image-manife
 
 The fallback sends one request per manifest item, so each image can use a distinct prompt and crop. It prints only the generated file paths. Integrate the saved file with PptxGenJS using `addImage({ path, sizing: { type: 'cover' | 'contain', x, y, w, h } })`.
 
-If the API key is absent, the script exits with a clear error and does not make a network request. GPT Image access may additionally require API organization verification; consult the official OpenAI image-generation documentation when an API request is denied.
+If the API key is absent, the script exits with a clear error and does not make a network request. Network permissions, runtime policy, API quota, and model access can still prevent the fallback. GPT Image access may additionally require API organization verification; consult the official OpenAI image-generation documentation when an API request is denied.

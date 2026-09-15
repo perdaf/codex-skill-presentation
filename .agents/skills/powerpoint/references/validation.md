@@ -2,6 +2,8 @@
 
 The first generated deck is not automatically final. After each material correction, regenerate and validate it.
 
+For `PRESENTATION_FORMAT=HTML`, apply the dedicated static/browser checks and visual inspection in [Web Presentation Engine](web-presentation-engine.md). Use `assets/web-validation.js` and, when available, `scripts/render-web-presentation.js`. A successful static check does not replace browser interaction testing or visual review.
+
 For `DETAILED`, `ULTRA_DETAILED`, `HANDOUT`, or `DUAL`, run the pedagogical and print checks in [Teaching & Handout Engine](teaching-handout-engine.md) before or alongside the visual checks. Pedagogical validation is a distinct gate: visual polish cannot compensate for missing, unordered, or unactionable instruction.
 
 ## Structural checks

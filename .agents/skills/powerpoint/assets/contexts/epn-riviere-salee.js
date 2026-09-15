@@ -4,6 +4,7 @@ module.exports = Object.freeze({
   id: 'EPN_RIVIERE_SALEE_CONTEXT',
   organizationName: 'EPN de Rivière-Salée',
   defaultBrand: 'EPN_RIVIERE_SALEE',
+  audienceRepresentation: 'MARTINIQUE',
   presetFamily: Object.freeze({
     SENIOR: 'EPN_SENIOR_COURSE',
     KIDS: 'EPN_KIDS_WORKSHOP',

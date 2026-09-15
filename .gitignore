@@ -25,3 +25,13 @@ temp/
 
 # Logs
 *.log
+
+# This repository publishes only the PowerPoint skill package.
+# Keep generated decks, workshop projects, screenshots, and ad-hoc fixtures out.
+/*
+!/.gitignore
+!/.agents/
+/.agents/*
+!/.agents/skills/
+/.agents/skills/*
+!/.agents/skills/powerpoint/

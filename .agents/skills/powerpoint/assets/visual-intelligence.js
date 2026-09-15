@@ -1,6 +1,7 @@
 'use strict';
 
 const { assessIconRecognizability } = require('./icon-reliability');
+const { humanRepresentationPrompt } = require('./audience-representation');
 
 const VISUAL_ROLES = Object.freeze(['EDITORIAL_SCENE', 'DIAGRAM', 'PROCESS', 'TIMELINE', 'DATA_VISUALIZATION', 'FUNCTIONAL_ICON', 'REAL_INTERFACE', 'DECORATIVE']);
 const METHODS = Object.freeze({ IMAGEGEN: 'IMAGEGEN', POWERPOINT: 'POWERPOINT', POWERPOINT_CHART: 'POWERPOINT_CHART', VECTOR: 'VECTOR', SCREENSHOT: 'SCREENSHOT', OPTIONAL: 'OPTIONAL' });
@@ -123,6 +124,7 @@ function buildCompositionAwarePrompt(subject, compositionInput = {}, artDirectio
     `Place the principal subject in the ${c.subjectPosition.toLowerCase()} region and preserve calm negative space on the ${c.negativeSpace.toLowerCase()}.`,
     `Framing: ${c.framing}; crop strategy: ${c.cropStrategy}; preserve fully: ${c.preserve.length ? c.preserve.join(', ') : 'face, hands, and functional objects'}.`,
     artDirection.style ? `Style invariants: ${artDirection.style}.` : '', artDirection.palette ? `Palette: ${artDirection.palette}.` : '',
+    humanRepresentationPrompt({ visualRole: 'EDITORIAL_SCENE', hasPeople: artDirection.hasPeople === true, audienceRepresentation: artDirection.audienceRepresentation }),
     `No text, logo, watermark, invented software interface, or important content near crop edges.`].filter(Boolean).join(' ');
 }
 

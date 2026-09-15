@@ -18,9 +18,17 @@ For seniors, especially at `ULTRA_DETAILED`, use simple explicit sentences, comf
 
 ## DELIVERY_MODE
 
-- `PRESENTATION`: editable 16:9 PowerPoint optimized for projection.
+- `PRESENTATION`: a 16:9 presentation branch optimized for projection; its technical output is selected separately by `PRESENTATION_FORMAT`.
 - `HANDOUT`: autonomous, print-friendly A4 PDF plus reproducible source.
-- `DUAL`: both outputs from one factual and pedagogical master source. Never write two independent courses.
+- `DUAL`: `PRESENTATION + HANDOUT` from one factual and pedagogical master source. It may be HTML + PDF or PPTX + PDF. Never write two independent courses.
+
+## PRESENTATION_FORMAT — V4.6
+
+- `AUTO`: format not yet resolved; never compose a final presentation in this state.
+- `HTML`: local HTML/CSS/JavaScript presentation for direct computer projection or requested web/interactive use.
+- `PPTX`: editable PowerPoint generated with PptxGenJS.
+
+For delivery containing a presentation, follow [Web Presentation Engine](web-presentation-engine.md) for explicit signals and the material clarification gate. For `HANDOUT` alone, presentation format is not applicable and no question is asked.
 
 The projection keeps essential concepts, important steps, exercises, and trainer cues. It may summarize the master content and must not become dense merely because depth is high.
 
