@@ -51,6 +51,8 @@ Opportunity is not a method. `HIGH → PROCESS → POWERPOINT` is as valid as `H
 
 Classify the visual by function before choosing a method. Use `assets/visual-intelligence.js` for deterministic routing where helpful.
 
+For HTML only, V4.6 may extend the unchanged result with `INTERACTION_METHOD` through `assets/web-interactions.js`. Interaction comes after `VISUAL_OPPORTUNITY → VISUAL_ROLE → IMAGE_METHOD` and never changes image routing or master content. See [Web Presentation Engine](web-presentation-engine.md).
+
 | Visual role | Default method |
 | --- | --- |
 | `EDITORIAL_SCENE` | `IMAGEGEN` |

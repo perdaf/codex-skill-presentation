@@ -1,11 +1,21 @@
 ---
 name: powerpoint
-description: Create, modify, and validate editable PowerPoint presentations and print-ready A4 learning handouts, including storytelling, pedagogy, art direction, visuals, and quality control. Use for PPTX decks, slides, training, education, business, social-media presentations, and dual projection/handout courses; use the runtime's native image-generation capability for original raster visuals when available.
+description: Create, modify, and validate projected presentations in local HTML or editable PowerPoint, plus print-ready A4 learning handouts, including storytelling, pedagogy, art direction, interactions, visuals, and quality control. Use for web presentations, PPTX decks, slides, training, education, business, social-media presentations, and dual presentation/handout courses; use the runtime's native image-generation capability for original raster visuals when available.
 ---
 
-# PowerPoint V4.5.2 — Targeted Edit Layer
+# PowerPoint V4.6 — Web Presentation Engine
 
-Create editable, presentation-ready `.pptx` files with PptxGenJS 4.0.1 and, when requested, autonomous print-ready A4 handout PDFs derived from the same course content. Treat “create a presentation on X” as an end-to-end design request; treat a training request as both a content-design and delivery-design problem. Do not rasterize editable content or modify the `imagegen` skill. This skill is compatible with Codex CLI 0.148.0.
+Create presentation-ready local HTML/CSS/JavaScript projects or editable `.pptx` files with PptxGenJS 4.0.1 and, when requested, autonomous print-ready A4 handout PDFs derived from the same course content. Treat “create a presentation on X” as an end-to-end design request; treat a training request as both a content-design and delivery-design problem. Do not rasterize editable content or modify the `imagegen` skill. V4.6 is additive: every V4.5.2 engine and validation remains available and unchanged.
+
+V4.6 separates `DELIVERY_MODE=PRESENTATION|HANDOUT|DUAL` from `PRESENTATION_FORMAT=AUTO|HTML|PPTX`. Delivery describes the pedagogical output; format describes only the technical presentation branch. `DUAL` means `PRESENTATION + HANDOUT`, not necessarily PPTX + PDF. HTML adds a standards-based, offline-capable Web Presentation Engine while preserving the same content, profile, Brand, Visual Intelligence, image, and validation pipeline.
+
+## Presentation format resolution
+
+Resolve new requests with `resolveV46RequestWithContext()` from `assets/presentation-format.js`; it wraps the stabilized Context and Intent resolvers. Explicit HTML/web/interactive/direct-computer projection resolves to `HTML`. Explicit PowerPoint/PPTX or a file intended for editing in PowerPoint resolves to `PPTX`. Explicit user constraints retain priority.
+
+When delivery includes a presentation and its usage is not already unambiguous, stop before composition and ask exactly: **« La présentation sera-t-elle projetée directement depuis l’ordinateur ? »** This is a material question. Never ask it for `HANDOUT` alone, and never ask when the answer is already deducible. `PRESENTATION_FORMAT=AUTO` is a resolution state, not a final deliverable.
+
+Read [Web Presentation Engine](references/web-presentation-engine.md) whenever format resolution is needed or `PRESENTATION_FORMAT=HTML`.
 
 V4.3 adds an optional brand layer that overlays, but never replaces, the audience profile and teaching configuration. It also classifies visual needs by function so editorial scenes may prioritize ImageGen while exact diagrams, processes, charts, functional icons, and real interfaces use controlled methods. When no brand is requested, preserve V4.2 behavior exactly.
 
@@ -29,7 +39,7 @@ When a request targets an existing presentation, follow:
 
 `EXISTING PROJECT → EDIT REQUEST → TARGET RESOLUTION → CHANGE CLASSIFICATION → IMPACT ANALYSIS → TARGETED PATCH → REGENERATION → TARGETED VALIDATION → REGRESSION CHECK`
 
-Build an inspectable patch plan with `assets/targeted-edit.js` before editing. Prefer `presentation.js` as the source of truth and regenerate the PPTX; never patch PPTX OOXML directly when the JS source exists. Resolve only the named slides and elements. If the project evidence yields multiple materially different matches, return `AMBIGUOUS_TARGET` and clarify rather than modifying all matches.
+Build an inspectable patch plan before editing. For PPTX, use `assets/targeted-edit.js`, prefer `presentation.js` as the source of truth, and regenerate the PPTX; never patch PPTX OOXML directly when the JS source exists. For HTML, use `assets/web-targeted-edit.js` and modify only the targeted slide section, component, local style, asset reference, or interaction wiring. Resolve only the named slides and elements. If the project evidence yields multiple materially different matches, return `AMBIGUOUS_TARGET` and clarify rather than modifying all matches.
 
 Preserve every slide, element, layout, style, brand decision, and output not named by the request. A minimal local adjustment is allowed only to prevent overflow, collision, clipping, off-slide placement, or loss of readability, and must be reported. A request about a slide affects projection only unless the handout is explicitly named.
 
@@ -39,21 +49,21 @@ Explicit user edits override prior automatic visual choices. A requested generat
 
 ## Mandatory resolution pipeline
 
-Every runtime using this skill **MUST resolve configuration before deck composition**:
+Every runtime using this skill **MUST resolve configuration before presentation composition**:
 
-`USER REQUEST → ACTIVE CONTEXT → resolveRequestWithContext() → RESOLVED CONFIGURATION → Teaching / Brand / Visual Intelligence → Visual Bible / Visual Manifest → composition → asset generation → validation`
+`USER REQUEST → ACTIVE CONTEXT → resolveV46RequestWithContext() → FORMAT CLARIFICATION WHEN REQUIRED → RESOLVED CONFIGURATION → Teaching / Brand / Visual Intelligence → Visual Bible / Visual Manifest → renderer → asset generation → validation`
 
-When an organizational context is explicitly supplied or available in the working environment, pass it to `resolveRequestWithContext()` before the Intent Layer. For an EPN de Rivière-Salée project that declares `EPN_RIVIERE_SALEE_CONTEXT`, pass that exact context; never infer it for every PowerPoint project. After resolution, the returned `brand`, `profile`, `contentDepth`, `deliveryMode`, `pageBudget`, and `audienceRepresentation` are the source of truth. Do not manually reconstruct them.
+When an organizational context is explicitly supplied or available in the working environment, pass it to `resolveV46RequestWithContext()` before the Intent Layer. For an EPN de Rivière-Salée project that declares `EPN_RIVIERE_SALEE_CONTEXT`, pass that exact context; never infer it for every presentation project. After resolution, the returned `brand`, `profile`, `contentDepth`, `deliveryMode`, `presentationFormat`, `pageBudget`, and `audienceRepresentation` are the source of truth. Do not manually reconstruct them.
 
 Before generating an `EDITORIAL_SCENE`, the agent **MUST** run Visual Intelligence, construct the relevant Visual Bible invariants and Visual Manifest, merge those invariants into the final prompt, and only then resolve and call `NATIVE_IMAGE_GENERATION`. The shortcut `USER REQUEST → manual image prompt → generator` is prohibited whenever the deterministic layers contain relevant information. The concrete runtime provider is selected only after `VISUAL_ROLE → IMAGE_METHOD → CAPABILITY`.
 
-Use [Mandatory execution contract](references/execution-contract.md) and `assets/mandatory-pipeline.js` for the required trace and fail-safe behavior. If a mandatory stage cannot run, reuse an unambiguous structured resolved configuration or report the explicit blocked state; never silently approximate or drop `HUMAN_REPRESENTATION`.
+Use [Mandatory execution contract](references/execution-contract.md) and `assets/v46-pipeline.js` for V4.6 resolution before delegating to the unchanged `assets/mandatory-pipeline.js`. If a mandatory stage cannot run, reuse an unambiguous structured resolved configuration or report the explicit blocked state; never silently approximate, choose a final format from `AUTO`, or drop `HUMAN_REPRESENTATION`.
 
 ## Non-negotiable constraints
 
-- Use PptxGenJS as the primary engine. Keep titles, text, shapes, tables, charts, simple diagrams, lines, and practical icons editable.
+- For `PRESENTATION_FORMAT=PPTX`, use PptxGenJS as the primary engine and keep titles, text, shapes, tables, charts, simple diagrams, lines, and practical icons editable. For `HTML`, use the Web Presentation Engine and standards-based local files.
 - For original photos, illustrations, and backgrounds, follow the image-generation decision tree in [image generation](references/image-generation.md). A listed skill or presumed tool name does **not** prove that a native image-generation capability is callable in this session. Store every generated result under `assets/images/` and integrate it using PptxGenJS; do not use the API fallback when a compatible native capability is callable.
-- Preserve an existing deck’s dimensions, theme, layouts, content, and visual identity unless asked to redesign it. Use a supplied template as the base when practical.
+- Preserve an existing presentation’s format, dimensions, theme, layouts, content, interactions, and visual identity unless asked to redesign or convert it. Use a supplied template as the base when practical.
 - Keep JavaScript and every generated or supplied asset. Do not delete source files or flatten a deck without explicit permission.
 - Default to `LAYOUT_WIDE` (13.333 × 7.5 in, 16:9), except where the request, a template, or a social format calls for another size.
 - Preserve V3 behavior: decks may use no images; charts and diagrams remain editable; native raster generation and the `gpt-image-2` fallback remain available; LibreOffice rendering, PNG inspection, source preservation, structural checks, and the three-pass correction limit remain mandatory when applicable.
@@ -61,7 +71,7 @@ Use [Mandatory execution contract](references/execution-contract.md) and `assets
 
 ## Workflow
 
-The first PPTX is a draft, not automatically final.
+The first presentation build is a draft, not automatically final.
 
 1. **Resolve context and intent:** execute the mandatory resolution pipeline above. When an active context exists, apply the [Context Layer](references/context-layer.md) before translating the request through the [Intent & Preset Layer](references/intent-layer.md). Preserve subject, audience, duration, objectives, prerequisites, exclusions, explicit constraints, preset, inference, ambiguity, research strategy, and budget tension. Context never overrides an explicit user constraint.
 2. **Research and master content when needed:** for `DETAILED`, `ULTRA_DETAILED`, or `DUAL`, establish the factual content and pedagogical progression before design. In `DUAL`, both outputs must derive from one master source; preserve it as `content/course-content.md`.
@@ -69,8 +79,8 @@ The first PPTX is a draft, not automatically final.
 4. **Plan pedagogy, storyboard, and rhythm:** define learning objectives and progression before mapping the master content to projection slides and/or A4 pages. Apply pedagogical compression rather than deleting essential explanations or shrinking type.
 5. **Art direction:** instantiate or adapt a token theme for palette, typography, spacing, grid, shapes, icons, photographic treatment, and a print-friendly handout adaptation when applicable.
 6. **Assets:** assess `VISUAL_OPPORTUNITY`, then classify each actual visual need with [Visual Intelligence](references/visual-intelligence.md). Record important decisions in the visual manifest. Before generating originals, write the enriched visual bible. Make ImageGen prompts aware of narrative role, target region, text position, crop, preserved elements, focal placement, and negative space. Prefer the runtime's callable `NATIVE_IMAGE_GENERATION` capability; use the existing fallback only under the rules in [image generation](references/image-generation.md).
-7. **Build:** compose projection slides with existing theme-aware [components](assets/presentation-components.js) and [layouts](assets/layouts.js). Build handouts as genuine A4 pages rather than slide printouts. Preserve editable source material and follow [PptxGenJS conventions](references/pptxgenjs-conventions.md).
-8. **Validate and improve:** run pedagogical validation before visual validation. For handouts, also validate print format and autonomy. Correct sources and rerender, retaining the existing three-pass maximum.
+7. **Build:** for PPTX, compose projection slides with existing theme-aware [components](assets/presentation-components.js) and [layouts](assets/layouts.js) and follow [PptxGenJS conventions](references/pptxgenjs-conventions.md). For HTML, use `assets/web-presentation-engine.js`; keep each slide a 16:9 pedagogical screen and all runtime resources local. Build handouts as genuine A4 pages rather than slide printouts.
+8. **Validate and improve:** run pedagogical validation before visual validation. For HTML, run `assets/web-validation.js`, browser interaction checks, and visual inspection. For handouts, also validate print format and autonomy. Correct sources and rerender, retaining the existing three-pass maximum.
 9. **Deliver:** provide the requested outputs and keep JavaScript, master content, assets, PDF, PPTX, and renders needed for reproduction.
 
 ## Design behavior
@@ -118,12 +128,25 @@ course-name/
 
 The handout source may use an intermediate A4 PPTX for LibreOffice conversion; retain it when it is useful for reproduction. Do not force this structure on presentation-only V4.1 workflows.
 
+For HTML presentation output, prefer:
+
+```text
+presentation-web/
+├── index.html
+├── styles.css
+├── presentation.js
+└── assets/images/
+```
+
+For `DUAL + HTML`, keep `presentation-web/`, `handout.pdf`, `handout.js`, and `content/course-content.md` in the same course project. For `DUAL + PPTX`, retain the established PPTX + PDF structure.
+
 ## Required quality bar
 
 Respect the grid, safe margins, alignment, vertical rhythm, proportions, hierarchy, and image zones. Keep important content away from edges; never knowingly place an element outside the slide, stretch an image, leave low-contrast text, or create an overcrowded slide. If no rendering engine is available, do structural and code checks and say that full visual inspection was unavailable.
 
 ## Reference routing
 
+- Read [Web Presentation Engine](references/web-presentation-engine.md) for V4.6 format resolution, HTML composition, interactions, offline output, HTML Targeted Edit, and web validation.
 - Read [Targeted Edit Layer](references/targeted-edit-layer.md) for any modification to an existing deck.
 - Read [Mandatory execution contract](references/execution-contract.md) before composing any deck or generating any asset.
 - Read [design system](references/design-system.md) for visual-direction decisions.

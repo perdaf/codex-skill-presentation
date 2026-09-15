@@ -1,10 +1,12 @@
 {
   "name": "powerpoint",
-  "version": "1.0.0",
-  "description": "",
+  "version": "4.6.0",
+  "description": "Additive PPTX, handout PDF, and offline HTML web presentation engine",
   "main": "index.js",
   "scripts": {
-    "test": "node tests/test-design-engine.js && node tests/test-auto-style.js && node tests/test-teaching-engine.js && node tests/test-brand-layer.js && node tests/test-brand-runtime.js && node tests/test-visual-intelligence.js && node tests/test-visual-opportunity.js && node tests/test-visual-expression.js && node tests/test-deck-visual-diversity.js && node tests/test-intent-layer.js && node tests/test-context-layer.js && node tests/test-connector-reliability.js && node tests/test-icon-recognizability.js && node tests/test-context-visual-runtime.js && node tests/test-image-generation-runtime.js && node tests/test-audience-representation.js && node tests/test-mandatory-pipeline.js && node tests/test-targeted-edit.js && node tests/test-targeted-edit-readability.js && node tests/test-v45-engine-integrity.js",
+    "test": "npm run test:v45 && npm run test:web",
+    "test:v45": "node tests/test-design-engine.js && node tests/test-auto-style.js && node tests/test-teaching-engine.js && node tests/test-brand-layer.js && node tests/test-brand-runtime.js && node tests/test-visual-intelligence.js && node tests/test-visual-opportunity.js && node tests/test-visual-expression.js && node tests/test-deck-visual-diversity.js && node tests/test-intent-layer.js && node tests/test-context-layer.js && node tests/test-connector-reliability.js && node tests/test-icon-recognizability.js && node tests/test-context-visual-runtime.js && node tests/test-image-generation-runtime.js && node tests/test-audience-representation.js && node tests/test-mandatory-pipeline.js && node tests/test-targeted-edit.js && node tests/test-targeted-edit-readability.js && node tests/test-v45-engine-integrity.js",
+    "test:web": "node tests/test-presentation-format.js && node tests/test-web-interactions.js && node tests/test-web-runtime.js && node tests/test-web-engine.js && node tests/test-web-targeted-edit.js && node tests/test-web-renderer.js && node tests/test-web-browser.js",
     "test:auto-style": "node tests/test-auto-style.js",
     "test:teaching": "node tests/test-teaching-engine.js",
     "test:brand": "node tests/test-brand-layer.js",
@@ -12,7 +14,10 @@
     "test:visual": "node tests/test-visual-intelligence.js && node tests/test-visual-opportunity.js && node tests/test-visual-expression.js && node tests/test-deck-visual-diversity.js && node tests/test-image-generation-runtime.js",
     "test:intent": "node tests/test-intent-layer.js",
     "test:context": "node tests/test-context-layer.js",
-    "test:reliability": "node tests/test-connector-reliability.js && node tests/test-icon-recognizability.js && node tests/test-context-visual-runtime.js"
+    "test:reliability": "node tests/test-connector-reliability.js && node tests/test-icon-recognizability.js && node tests/test-context-visual-runtime.js",
+    "test:format": "node tests/test-presentation-format.js",
+    "test:web-static": "node tests/test-web-interactions.js && node tests/test-web-runtime.js && node tests/test-web-engine.js && node tests/test-web-targeted-edit.js",
+    "test:web-browser": "node tests/test-web-renderer.js && node tests/test-web-browser.js"
   },
   "keywords": [],
   "author": "",

@@ -10,6 +10,8 @@ Prefer `presentation.js` over direct PPTX/OOXML editing and regenerate `presenta
 
 Use `createTargetedEditPlan()` from `assets/targeted-edit.js`. It resolves single slides, lists, ranges, semantic element roles, exact text, connectors, and identifiable visual groups. Evidence from a supplied project inventory determines whether a target is unique. When several real matches would produce materially different edits, stop with `AMBIGUOUS_TARGET`.
 
+For a V4.6 HTML project, use `createWebTargetedEditPlan()` from `assets/web-targeted-edit.js`. It preserves this contract, delegates PPTX work back to the existing planner, limits HTML edits to the named slide/component/files, and validates untouched slide fingerprints. Interaction-only changes never authorize rewriting unrelated slides or the handout.
+
 Changes may combine `TEXT_CONTENT`, `TEXT_STYLE`, `LAYOUT`, `VISUAL_REPLACEMENT`, `IMAGE_REPLACEMENT`, `CONNECTOR`, `COLOR`, `TYPOGRAPHY`, `SIZE`, `POSITION`, `DELETE`, `ADD`, and `PEDAGOGICAL_CONTENT`.
 
 ## Minimal patch
