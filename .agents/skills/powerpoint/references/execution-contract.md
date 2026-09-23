@@ -2,7 +2,7 @@
 
 This contract is runtime-independent. The agent runtime supplies callable tools only after deterministic pedagogical, contextual, and artistic decisions are complete.
 
-V4.6 adds a format-resolution gate before this unchanged asset pipeline. Call `resolveV46RequestWithContext()` from `assets/presentation-format.js`; if its presentation branch remains `PRESENTATION_FORMAT=AUTO`, ask the returned material question and do not compose or generate assets. `assets/v46-pipeline.js` enforces this gate, then delegates to `assets/mandatory-pipeline.js`.
+V4.6 adds a format-resolution gate before this unchanged asset pipeline. Call `resolveV46RequestWithContext()` from `assets/presentation-format.js`; if its presentation branch remains `PRESENTATION_FORMAT=AUTO`, ask the returned material question and do not compose or generate assets. `assets/v46-pipeline.js` enforces this gate, then delegates to `assets/mandatory-pipeline.js`. An explicit Gamma request resolves the gate to `GAMMA`; build the deterministic content, visual decisions, and storyboard normally, then export them with `assets/gamma-export.js` instead of invoking a slide renderer.
 
 ## Required order
 

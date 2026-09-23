@@ -20,13 +20,14 @@ For seniors, especially at `ULTRA_DETAILED`, use simple explicit sentences, comf
 
 - `PRESENTATION`: a 16:9 presentation branch optimized for projection; its technical output is selected separately by `PRESENTATION_FORMAT`.
 - `HANDOUT`: autonomous, print-friendly A4 PDF plus reproducible source.
-- `DUAL`: `PRESENTATION + HANDOUT` from one factual and pedagogical master source. It may be HTML + PDF or PPTX + PDF. Never write two independent courses.
+- `DUAL`: `PRESENTATION + HANDOUT` from one factual and pedagogical master source. It may be HTML + PDF, PPTX + PDF, or a Gamma Markdown brief + PDF. Never write two independent courses.
 
 ## PRESENTATION_FORMAT — V4.6
 
 - `AUTO`: format not yet resolved; never compose a final presentation in this state.
 - `HTML`: local HTML/CSS/JavaScript presentation for direct computer projection or requested web/interactive use.
 - `PPTX`: editable PowerPoint generated with PptxGenJS.
+- `GAMMA`: self-contained Markdown brief containing the resolved instructions, content, visual direction, and storyboard for generation in Gamma. The skill does not render the final deck in this mode.
 
 For delivery containing a presentation, follow [Web Presentation Engine](web-presentation-engine.md) for explicit signals and the material clarification gate. For `HANDOUT` alone, presentation format is not applicable and no question is asked.
 

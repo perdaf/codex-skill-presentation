@@ -1,21 +1,21 @@
 ---
 name: powerpoint
-description: Create, modify, and validate projected presentations in local HTML or editable PowerPoint, plus print-ready A4 learning handouts, including storytelling, pedagogy, art direction, interactions, visuals, and quality control. Use for web presentations, PPTX decks, slides, training, education, business, social-media presentations, and dual presentation/handout courses; use the runtime's native image-generation capability for original raster visuals when available.
+description: Create, modify, and validate projected presentations in local HTML or editable PowerPoint, generate structured Markdown briefs for Gamma, and produce print-ready A4 learning handouts, including storytelling, pedagogy, art direction, interactions, visuals, and quality control. Use for Gamma, web presentations, PPTX decks, slides, training, education, business, social-media presentations, and dual presentation/handout courses; use the runtime's native image-generation capability for original raster visuals when available.
 ---
 
 # PowerPoint V4.6 — Web Presentation Engine
 
-Create presentation-ready local HTML/CSS/JavaScript projects or editable `.pptx` files with PptxGenJS 4.0.1 and, when requested, autonomous print-ready A4 handout PDFs derived from the same course content. Treat “create a presentation on X” as an end-to-end design request; treat a training request as both a content-design and delivery-design problem. Do not rasterize editable content or modify the `imagegen` skill. V4.6 is additive: every V4.5.2 engine and validation remains available and unchanged.
+Create presentation-ready local HTML/CSS/JavaScript projects, editable `.pptx` files with PptxGenJS 4.0.1, or structured Markdown briefs that Gamma can turn into slides and, when requested, autonomous print-ready A4 handout PDFs derived from the same course content. Treat “create a presentation on X” as an end-to-end design request; treat a training request as both a content-design and delivery-design problem. Do not rasterize editable content or modify the `imagegen` skill. V4.6 is additive: every V4.5.2 engine and validation remains available and unchanged.
 
-V4.6 separates `DELIVERY_MODE=PRESENTATION|HANDOUT|DUAL` from `PRESENTATION_FORMAT=AUTO|HTML|PPTX`. Delivery describes the pedagogical output; format describes only the technical presentation branch. `DUAL` means `PRESENTATION + HANDOUT`, not necessarily PPTX + PDF. HTML adds a standards-based, offline-capable Web Presentation Engine while preserving the same content, profile, Brand, Visual Intelligence, image, and validation pipeline.
+V4.6 separates `DELIVERY_MODE=PRESENTATION|HANDOUT|DUAL` from `PRESENTATION_FORMAT=AUTO|HTML|PPTX|GAMMA`. Delivery describes the pedagogical output; format describes only the technical presentation branch. `DUAL` means `PRESENTATION + HANDOUT`, not necessarily PPTX + PDF. HTML adds a standards-based, offline-capable Web Presentation Engine while preserving the same content, profile, Brand, Visual Intelligence, image, and validation pipeline. The additive Gamma target exports the resolved content and storyboard as a self-contained Markdown generation brief; it does not call Gamma or replace the existing renderers.
 
 ## Presentation format resolution
 
-Resolve new requests with `resolveV46RequestWithContext()` from `assets/presentation-format.js`; it wraps the stabilized Context and Intent resolvers. Explicit HTML/web/interactive/direct-computer projection resolves to `HTML`. Explicit PowerPoint/PPTX or a file intended for editing in PowerPoint resolves to `PPTX`. Explicit user constraints retain priority.
+Resolve new requests with `resolveV46RequestWithContext()` from `assets/presentation-format.js`; it wraps the stabilized Context and Intent resolvers. Explicit HTML/web/interactive/direct-computer projection resolves to `HTML`. Explicit PowerPoint/PPTX or a file intended for editing in PowerPoint resolves to `PPTX`. An explicit Gamma request or Markdown brief for Gamma resolves to `GAMMA`. Explicit user constraints retain priority.
 
 When delivery includes a presentation and its usage is not already unambiguous, stop before composition and ask exactly: **« La présentation sera-t-elle projetée directement depuis l’ordinateur ? »** This is a material question. Never ask it for `HANDOUT` alone, and never ask when the answer is already deducible. `PRESENTATION_FORMAT=AUTO` is a resolution state, not a final deliverable.
 
-Read [Web Presentation Engine](references/web-presentation-engine.md) whenever format resolution is needed or `PRESENTATION_FORMAT=HTML`.
+Read [Web Presentation Engine](references/web-presentation-engine.md) whenever format resolution is needed or `PRESENTATION_FORMAT=HTML`. Read [Gamma Markdown Export](references/gamma-export.md) for `PRESENTATION_FORMAT=GAMMA`.
 
 V4.3 adds an optional brand layer that overlays, but never replaces, the audience profile and teaching configuration. It also classifies visual needs by function so editorial scenes may prioritize ImageGen while exact diagrams, processes, charts, functional icons, and real interfaces use controlled methods. When no brand is requested, preserve V4.2 behavior exactly.
 
@@ -61,7 +61,8 @@ Use [Mandatory execution contract](references/execution-contract.md) and `assets
 
 ## Non-negotiable constraints
 
-- For `PRESENTATION_FORMAT=PPTX`, use PptxGenJS as the primary engine and keep titles, text, shapes, tables, charts, simple diagrams, lines, and practical icons editable. For `HTML`, use the Web Presentation Engine and standards-based local files.
+- For `PRESENTATION_FORMAT=PPTX`, use PptxGenJS as the primary engine and keep titles, text, shapes, tables, charts, simple diagrams, lines, and practical icons editable. For `HTML`, use the Web Presentation Engine and standards-based local files. For `GAMMA`, generate a self-contained Markdown brief with `assets/gamma-export.js`; do not call Gamma, upload content, or claim to have inspected the final Gamma rendering.
+- A Gamma generation may contain at most 20 slides for this user's account. Apply pedagogical compression, preserve essential content, and block the export if the final storyboard still exceeds 20. In Gamma briefs, whenever people are genuinely useful, default to contemporary, varied, non-stereotypical Afro-Antillean representation unless the user explicitly requests another representation or no people.
 - For original photos, illustrations, and backgrounds, follow the image-generation decision tree in [image generation](references/image-generation.md). A listed skill or presumed tool name does **not** prove that a native image-generation capability is callable in this session. Store every generated result under `assets/images/` and integrate it using PptxGenJS; do not use the API fallback when a compatible native capability is callable.
 - Preserve an existing presentation’s format, dimensions, theme, layouts, content, interactions, and visual identity unless asked to redesign or convert it. Use a supplied template as the base when practical.
 - Keep JavaScript and every generated or supplied asset. Do not delete source files or flatten a deck without explicit permission.
@@ -79,8 +80,8 @@ The first presentation build is a draft, not automatically final.
 4. **Plan pedagogy, storyboard, and rhythm:** define learning objectives and progression before mapping the master content to projection slides and/or A4 pages. Apply pedagogical compression rather than deleting essential explanations or shrinking type.
 5. **Art direction:** instantiate or adapt a token theme for palette, typography, spacing, grid, shapes, icons, photographic treatment, and a print-friendly handout adaptation when applicable.
 6. **Assets:** assess `VISUAL_OPPORTUNITY`, then classify each actual visual need with [Visual Intelligence](references/visual-intelligence.md). Record important decisions in the visual manifest. Before generating originals, write the enriched visual bible. Make ImageGen prompts aware of narrative role, target region, text position, crop, preserved elements, focal placement, and negative space. Prefer the runtime's callable `NATIVE_IMAGE_GENERATION` capability; use the existing fallback only under the rules in [image generation](references/image-generation.md).
-7. **Build:** for PPTX, compose projection slides with existing theme-aware [components](assets/presentation-components.js) and [layouts](assets/layouts.js) and follow [PptxGenJS conventions](references/pptxgenjs-conventions.md). For HTML, use `assets/web-presentation-engine.js`; keep each slide a 16:9 pedagogical screen and all runtime resources local. Build handouts as genuine A4 pages rather than slide printouts.
-8. **Validate and improve:** run pedagogical validation before visual validation. For HTML, run `assets/web-validation.js`, browser interaction checks, and visual inspection. For handouts, also validate print format and autonomy. Correct sources and rerender, retaining the existing three-pass maximum.
+7. **Build:** for PPTX, compose projection slides with existing theme-aware [components](assets/presentation-components.js) and [layouts](assets/layouts.js) and follow [PptxGenJS conventions](references/pptxgenjs-conventions.md). For HTML, use `assets/web-presentation-engine.js`; keep each slide a 16:9 pedagogical screen and all runtime resources local. For Gamma, use `assets/gamma-export.js` to render the approved storyboard to Markdown. Build handouts as genuine A4 pages rather than slide printouts.
+8. **Validate and improve:** run pedagogical validation before visual validation. For HTML, run `assets/web-validation.js`, browser interaction checks, and visual inspection. For Gamma, run `validateGammaBrief()` and inspect the Markdown structure, slide count, content fidelity, visual directions, and representation rules; final visual QA remains external because Gamma performs the rendering. For handouts, also validate print format and autonomy. Correct sources and rerender, retaining the existing three-pass maximum.
 9. **Deliver:** provide the requested outputs and keep JavaScript, master content, assets, PDF, PPTX, and renders needed for reproduction.
 
 ## Design behavior
@@ -138,7 +139,15 @@ presentation-web/
 └── assets/images/
 ```
 
-For `DUAL + HTML`, keep `presentation-web/`, `handout.pdf`, `handout.js`, and `content/course-content.md` in the same course project. For `DUAL + PPTX`, retain the established PPTX + PDF structure.
+For Gamma presentation output, prefer:
+
+```text
+presentation-gamma/
+├── gamma-brief.md
+└── content/course-content.md  # when master content is required
+```
+
+For `DUAL + HTML`, keep `presentation-web/`, `handout.pdf`, `handout.js`, and `content/course-content.md` in the same course project. For `DUAL + PPTX`, retain the established PPTX + PDF structure. For `DUAL + GAMMA`, keep `presentation-gamma/gamma-brief.md`, the A4 handout sources/output, and `content/course-content.md` together.
 
 ## Required quality bar
 
@@ -147,6 +156,7 @@ Respect the grid, safe margins, alignment, vertical rhythm, proportions, hierarc
 ## Reference routing
 
 - Read [Web Presentation Engine](references/web-presentation-engine.md) for V4.6 format resolution, HTML composition, interactions, offline output, HTML Targeted Edit, and web validation.
+- Read [Gamma Markdown Export](references/gamma-export.md) when Gamma should create the slides or the requested deliverable is a Markdown generation brief for Gamma.
 - Read [Targeted Edit Layer](references/targeted-edit-layer.md) for any modification to an existing deck.
 - Read [Mandatory execution contract](references/execution-contract.md) before composing any deck or generating any asset.
 - Read [design system](references/design-system.md) for visual-direction decisions.

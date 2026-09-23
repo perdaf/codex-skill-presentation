@@ -3,7 +3,7 @@
 const { resolveIntent } = require('./intent-layer');
 const { resolveRequestWithContext } = require('./context-layer');
 
-const PRESENTATION_FORMATS = Object.freeze(['AUTO', 'HTML', 'PPTX']);
+const PRESENTATION_FORMATS = Object.freeze(['AUTO', 'HTML', 'PPTX', 'GAMMA']);
 const PRESENTATION_FORMAT_QUESTION = 'La présentation sera-t-elle projetée directement depuis l’ordinateur ?';
 
 function normalizeText(value = '') {
@@ -41,9 +41,15 @@ function detectTextFormatSignals(request = '') {
     /\bmodifiable\s+dans\s+powerpoint\b/,
     /\bformat\s+pptx\b/,
   ];
+  const gammaPatterns = [
+    /\bgamma\b/,
+    /\bfichier\s+(?:markdown|md)\s+(?:pour|destine\s+a)\s+gamma\b/,
+    /\bbrief\s+(?:markdown|md)\s+(?:pour|destine\s+a)\s+gamma\b/,
+  ];
   return {
     html: htmlPatterns.some((pattern) => pattern.test(text)),
     pptx: pptxPatterns.some((pattern) => pattern.test(text)),
+    gamma: gammaPatterns.some((pattern) => pattern.test(text)),
   };
 }
 
@@ -54,21 +60,27 @@ function detectPresentationFormat(request = '', structuredExplicit = {}) {
   }
 
   const signals = detectTextFormatSignals(request);
-  if (signals.html && signals.pptx) {
-    return { value: 'AUTO', source: 'EXPLICIT_CONFLICT', reason: 'request contains both HTML and PPTX format signals', conflict: true };
+  const selectedSignals = Object.entries(signals).filter(([, active]) => active).map(([name]) => name.toUpperCase());
+  if (selectedSignals.length > 1) {
+    return { value: 'AUTO', source: 'EXPLICIT_CONFLICT', reason: `request contains conflicting format signals: ${selectedSignals.join(', ')}`, conflict: true };
   }
+  if (signals.gamma) return { value: 'GAMMA', source: 'EXPLICIT_USER', reason: 'Gamma generation brief or Markdown for Gamma requested' };
   if (signals.html) return { value: 'HTML', source: 'EXPLICIT_USER', reason: 'direct-computer, interactive, web, browser, or HTML presentation requested' };
   if (signals.pptx) return { value: 'PPTX', source: 'EXPLICIT_USER', reason: 'PowerPoint/PPTX or PowerPoint editing requested' };
   if (structuredExplicit.projectionDirect === true) return { value: 'HTML', source: 'EXPLICIT_ANSWER', reason: 'direct projection from the computer confirmed' };
   if (structuredExplicit.projectionDirect === false) return { value: 'PPTX', source: 'EXPLICIT_ANSWER', reason: 'direct projection from the computer declined' };
-  return { value: 'AUTO', source: 'DEFAULT', reason: 'presentation usage is not explicit enough to choose HTML or PPTX' };
+  return { value: 'AUTO', source: 'DEFAULT', reason: 'presentation usage is not explicit enough to choose HTML, PPTX, or Gamma' };
 }
 
 function buildDeliverables(deliveryMode, presentationFormat) {
   const delivery = String(deliveryMode || 'PRESENTATION').toUpperCase();
   const format = normalizePresentationFormat(presentationFormat);
   const outputs = [];
-  if (deliveryIncludesPresentation(delivery)) outputs.push(Object.freeze({ kind: 'PRESENTATION', format }));
+  if (deliveryIncludesPresentation(delivery)) {
+    outputs.push(Object.freeze(format === 'GAMMA'
+      ? { kind: 'PRESENTATION', format: 'GAMMA', artifact: 'MARKDOWN', maxSlides: 20 }
+      : { kind: 'PRESENTATION', format }));
+  }
   if (delivery === 'HANDOUT' || delivery === 'DUAL') outputs.push(Object.freeze({ kind: 'HANDOUT', format: 'PDF', page: 'A4' }));
   return Object.freeze(outputs);
 }

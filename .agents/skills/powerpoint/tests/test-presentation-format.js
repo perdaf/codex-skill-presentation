@@ -10,7 +10,7 @@ const {
 } = require('../assets/presentation-format');
 const { prepareV46ImageAsset } = require('../assets/v46-pipeline');
 
-assert.deepStrictEqual(PRESENTATION_FORMATS, ['AUTO', 'HTML', 'PPTX']);
+assert.deepStrictEqual(PRESENTATION_FORMATS, ['AUTO', 'HTML', 'PPTX', 'GAMMA']);
 
 const ambiguous = resolveV46Intent('Crée une présentation sur la sécurité numérique.');
 assert.strictEqual(ambiguous.deliveryMode, 'PRESENTATION');

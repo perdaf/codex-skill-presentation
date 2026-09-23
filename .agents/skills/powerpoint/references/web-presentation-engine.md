@@ -11,9 +11,10 @@ Use `resolveV46RequestWithContext()` from `assets/presentation-format.js`. It de
 - `DELIVERY_MODE=DUAL`: presentation branch plus A4 PDF handout from the same master content.
 - `PRESENTATION_FORMAT=HTML`: local web presentation.
 - `PRESENTATION_FORMAT=PPTX`: editable PowerPoint generated with PptxGenJS.
+- `PRESENTATION_FORMAT=GAMMA`: Markdown generation brief for Gamma; see [Gamma Markdown Export](gamma-export.md).
 - `PRESENTATION_FORMAT=AUTO`: unresolved technical format. It is never a final presentation output.
 
-An explicit request has priority. Direct projection from a computer, an interactive presentation, a web presentation, a browser presentation, or HTML resolves to `HTML`. PowerPoint, PPTX, or a file intended for editing in PowerPoint resolves to `PPTX`.
+An explicit request has priority. Direct projection from a computer, an interactive presentation, a web presentation, a browser presentation, or HTML resolves to `HTML`. PowerPoint, PPTX, or a file intended for editing in PowerPoint resolves to `PPTX`. Gamma or a Markdown brief for Gamma resolves to `GAMMA`.
 
 When delivery contains a presentation and usage is not unambiguous, stop before composition and ask exactly:
 

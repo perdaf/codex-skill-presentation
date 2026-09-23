@@ -168,6 +168,7 @@ validate_source() {
     assets/teaching.js \
     assets/visual-intelligence.js \
     assets/presentation-format.js \
+    assets/gamma-export.js \
     assets/v46-pipeline.js \
     assets/web-interactions.js \
     assets/web-presentation-engine.js \
@@ -175,6 +176,7 @@ validate_source() {
     assets/web-targeted-edit.js \
     assets/web-validation.js \
     references/web-presentation-engine.md \
+    references/gamma-export.md \
     scripts/render-presentation.js \
     scripts/render-web-presentation.js; do
     if [ ! -e "$SKILL_DIR/$relative" ]; then
