@@ -169,6 +169,7 @@ validate_source() {
     assets/visual-intelligence.js \
     assets/presentation-format.js \
     assets/gamma-export.js \
+    assets/gamma-pipeline.js \
     assets/v46-pipeline.js \
     assets/web-interactions.js \
     assets/web-presentation-engine.js \

@@ -1,60 +1,92 @@
-# Gamma Markdown Export
+# Gamma Presentation Blueprint
 
-Read this reference when the user explicitly asks Gamma to create the slides, requests a Gamma brief, or asks for a Markdown file intended for Gamma.
+Read this reference whenever Gamma should generate or render the slides.
 
-## Scope
+## Responsibility boundary
 
-`PRESENTATION_FORMAT=GAMMA` is an additive authoring target. The skill produces a self-contained `.md` brief; it does not call Gamma, spend Gamma credits, upload content, or generate the final deck. Existing HTML, PPTX and handout engines remain unchanged.
+Gamma is a rendering engine, not the pedagogical author. Before export, the skill must complete:
 
-Use the normal Context, Intent, Teaching, Brand and Visual Intelligence layers before export. The Markdown is a renderer of the resolved master content and storyboard, not a shortcut around them.
+`CONTEXT → INTENT → RESEARCH → TEACHING ENGINE → CONTENT ARCHITECTURE → BRAND → VISUAL INTELLIGENCE → GAMMA BLUEPRINT → VALIDATION`
+
+Use `prepareGammaBlueprint()` from `assets/gamma-pipeline.js`. It reuses the existing request resolver, Teaching Engine, Brand Layer, Context Layer and Visual Intelligence. Do not build a separate lightweight Gamma plan.
+
+The primary deliverable is `gamma-blueprint.md`. Research traceability belongs in the secondary `sources.md`. Never substitute a source list, research notes, or a simple outline for the blueprint.
 
 ## Resolution
 
-Explicit mentions of Gamma, a Gamma generation brief, or Markdown for Gamma resolve to `GAMMA`. Do not ask the direct-computer projection question because the technical target is already explicit. If Gamma and HTML/PPTX are both explicitly requested for the same presentation branch, return a format conflict and ask which target has priority.
+An explicit Gamma request resolves to `PRESENTATION_FORMAT=GAMMA`; do not ask the direct-computer projection question. For `DUAL + GAMMA`, generate the blueprint and the existing A4 handout from the same master content.
 
-For `HANDOUT` alone, Gamma is not applicable. For `DUAL + GAMMA`, deliver the Gamma Markdown brief plus the existing A4 handout PDF derived from the same master content.
+## Complete architecture before compression
 
-## Slide budget
+The account limit is `GAMMA_MAX_SLIDES=20`. Establish the complete learning architecture first, including all required objectives, prerequisites, demonstrations, procedures, practice, common errors, validation and synthesis. Then group compatible material intelligently.
 
-The user's account constraint is authoritative: one Gamma generation contains at most 20 slides. Treat `GAMMA_MAX_SLIDES=20` as a hard export limit even if Gamma's general product limits differ by plan or change over time.
+Never slice an array at slide 20. When the final coherent architecture still exceeds 20 slides, return `GAMMA_BLUEPRINT_INCOMPLETE` with `GAMMA_SLIDE_LIMIT_EXCEEDED` as the reason and recompose or request a scope decision.
 
-- Preserve an explicit target from 1 to 20.
-- For an automatic budget, choose the pedagogically appropriate count but cap it at 20.
-- When the planned or explicitly requested content exceeds 20, apply pedagogical compression first.
-- Never shrink type, overload slides, remove essential learning steps, or silently emit more than 20 slides.
-- If a coherent deck cannot fit, report `NEEDS_PEDAGOGICAL_COMPRESSION` or `GAMMA_SLIDE_LIMIT_EXCEEDED` and propose either a narrower scope or multiple separately generated modules. Do not split into multiple decks without the user's agreement.
+The resolved Teaching Engine page budget remains the first design target. The Gamma limit is only a hard ceiling; it does not force every deck toward 20 slides.
 
-## Human representation
+## Blueprint contract
 
-Unless the user explicitly requests another representation or no people, Gamma briefs default to `AFRO_ANTILLEAN` whenever a visual genuinely contains people. The instruction must request contemporary, varied, natural and dignified representation and must reject caricature, exoticization and automatic tropical clichés.
+Start exactly with:
 
-This default does not require people on every slide. Visual Intelligence still decides whether humans are pedagogically useful. Explicit user representation and explicit no-character requests retain priority.
+```markdown
+# GAMMA PRESENTATION BLUEPRINT
 
-## Markdown contract
+## Présentation
+Sujet : ...
+Public : ...
+Contexte : ...
+Durée : ...
+Nombre de slides : ...
+Langue : ...
+```
 
-Generate the file with `createGammaMarkdown()` from `assets/gamma-export.js`. Provide:
+Then include objectives, competencies, pedagogical direction, Brand-derived art direction, and explicit global generation instructions.
 
-- title, audience, objective and language;
-- the resolved pedagogical and artistic direction;
-- one ordered storyboard entry per slide;
-- for each slide: title, objective, message, visible content, visual direction and composition;
-- participation or presenter notes when relevant;
-- explicit representation instructions on slides that contain people;
-- a final control checklist.
+Every slide must define:
 
-Each `Slide NN` section maps to exactly one Gamma slide. Keep actual slide content distinct from instructions so Gamma can preserve the intended narrative. Do not rely on Gamma to research or repair missing facts: establish and verify master content before export.
+- `Rôle pédagogique`: why the slide exists and what must be understood;
+- `Titre affiché` and optional exact subtitle;
+- `Contenu affiché`: the concrete text or data Gamma must place on the slide;
+- `Message essentiel`: the single takeaway;
+- `Visuel`: `VISUAL_OPPORTUNITY`, `VISUAL_ROLE`, `IMAGE_METHOD`, expression, function, precise description, composition and exclusions;
+- `Mise en page`: spatial structure and hierarchy;
+- `Interaction / progression`: only when pedagogically useful;
+- `Consignes Gamma`: specific rendering instructions that preserve the intended teaching move.
+
+Gamma must not need to research, reconstruct the sequence, invent examples, fill placeholders, or turn slide titles into content.
+
+## Research and sources
+
+For volatile software or services, research current official primary sources before content architecture. Pass sources to the pipeline for `sources.md`; the blueprint renderer intentionally excludes URLs and source notes from `gamma-blueprint.md`.
+
+`sources.md` is traceability for the author. `gamma-blueprint.md` is the generation input for Gamma.
+
+## Brand and accessibility
+
+`buildBrandDirection()` obtains palette, typography, projection rules and exclusions from the resolved Brand Layer. Do not manually duplicate EPN values in calling code. For `EPN_RIVIERE_SALEE`, the resulting blueprint must expose the actual off-white background, navy text, pastel accents, readable typography, airy projection behavior and visual exclusions.
+
+When `PROFILE=SENIOR`, the blueprint must carry large text, strong contrast, few simultaneous elements and simple interactions. The validator blocks if Senior accessibility is absent.
+
+When a slide genuinely contains people, preserve the resolved representation. `AUDIENCE_REPRESENTATION=MARTINIQUE` must reach that slide’s human representation instruction. Explicit no-character or alternative representation requests retain priority.
+
+## Visual Intelligence
+
+Provide a real visual intent for every slide before calling the pipeline. `resolveGammaVisual()` routes it through the existing Visual Intelligence functions. Do not write “add a beautiful image.” Describe the subject or object, its learning function, the relationship to slide content, composition, protected elements, and what to avoid.
+
+Use real interface screenshots only when exact recognition is necessary and current evidence exists. Otherwise request a clearly labeled pedagogical schematic rather than an invented interface.
 
 ## Validation
 
-Run `validateGammaBrief()` and verify:
+Run `validateGammaBlueprint()` before writing files. It returns blocking code `GAMMA_BLUEPRINT_INCOMPLETE` when any material requirement fails, including:
 
-- 1–20 slides;
-- exact slide numbering and order;
-- every slide has a title and meaningful content;
-- visual directions are present where useful;
-- the global Afro-Antillean representation rule is present unless explicitly overridden;
-- slide-specific human scenes repeat the representation invariant;
-- no contradictory output-format instruction;
-- the Markdown is self-contained and contains no secret, API key, remote dependency or undeclared upload.
+- more than 20 slides;
+- missing global objectives, pedagogical direction or art direction;
+- slide without pedagogical stage, role, exact title, concrete content, essential message, layout or Gamma instructions;
+- missing or generic visual direction for a material visual opportunity;
+- placeholders such as “à compléter” or “à déterminer”;
+- uncovered objective, competency or required topic;
+- pedagogical order regression;
+- missing Senior or human-representation constraints;
+- embedded sources or a source-dominant document.
 
-Because Gamma owns the final rendering, visual validation of the generated Gamma deck remains external to this exporter. State this limitation when delivering the Markdown.
+Write final files with `writeGammaBlueprintPackage()` only after validation passes. The final visual inspection remains external because Gamma performs the rendering. Do not call Gamma or any image/API provider while producing the blueprint.

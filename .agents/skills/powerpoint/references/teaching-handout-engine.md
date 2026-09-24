@@ -27,7 +27,7 @@ For seniors, especially at `ULTRA_DETAILED`, use simple explicit sentences, comf
 - `AUTO`: format not yet resolved; never compose a final presentation in this state.
 - `HTML`: local HTML/CSS/JavaScript presentation for direct computer projection or requested web/interactive use.
 - `PPTX`: editable PowerPoint generated with PptxGenJS.
-- `GAMMA`: self-contained Markdown brief containing the resolved instructions, content, visual direction, and storyboard for generation in Gamma. The skill does not render the final deck in this mode.
+- `GAMMA`: complete Gamma Presentation Blueprint containing the resolved pedagogy, exact displayed content, per-slide Visual Intelligence and rendering instructions. The skill designs the full presentation; Gamma only renders the final slides.
 
 For delivery containing a presentation, follow [Web Presentation Engine](web-presentation-engine.md) for explicit signals and the material clarification gate. For `HANDOUT` alone, presentation format is not applicable and no question is asked.
 
